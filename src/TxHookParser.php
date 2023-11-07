@@ -44,14 +44,14 @@ class TxHookParser
                 break;
               case 'Hook':
                 foreach($AffectedNode->CreatedNode->NewFields->Hooks as $hook) {
-                  if(!\is_object($hook)) continue;
-                  
-                  $this->addHook(
-                    $hook->Hook->HookHash,
-                    $AffectedNode->CreatedNode->NewFields->Account, //affected account
-                    'Hook',
-                    'created'
-                  );
+                  if(isset($hook->Hook->HookHash)) {
+                    $this->addHook(
+                      $hook->Hook->HookHash,
+                      $AffectedNode->CreatedNode->NewFields->Account, //affected account
+                      'Hook',
+                      'installed'
+                    );
+                  }
                 }
                 break;
               case 'HookState':
@@ -60,9 +60,44 @@ class TxHookParser
             }
           }
         }
-      }
-      if(isset($AffectedNode->CreatedNode)) {
-        //dd('test');
+        if(isset($AffectedNode->ModifiedNode)) { //Modified
+          if(isset($AffectedNode->ModifiedNode->LedgerEntryType)) {
+            switch($AffectedNode->ModifiedNode->LedgerEntryType) {
+              case 'Hook':
+                foreach($AffectedNode->ModifiedNode->FinalFields->Hooks as $hook) {
+                  if(isset($hook->Hook->HookHash)) {
+                    $this->addHook(
+                      $hook->Hook->HookHash,
+                      $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
+                      'Hook',
+                      'updated'
+                    );
+                  }
+                }
+                break;
+            }
+          }
+        }
+
+        if(isset($AffectedNode->DeletedNode)) { //Deleted
+          if(isset($AffectedNode->DeletedNode->LedgerEntryType)) {
+            switch($AffectedNode->DeletedNode->LedgerEntryType) {
+              case 'Hook':
+                foreach($AffectedNode->DeletedNode->FinalFields->Hooks as $hook) {
+                  if(isset($hook->Hook->HookHash)) {
+                    
+                    $this->addHook(
+                      $hook->Hook->HookHash,
+                      $AffectedNode->DeletedNode->FinalFields->Account, //affected account
+                      'Hook',
+                      'uninstalled'
+                    );
+                  }
+                }
+                break;
+            }
+          }
+        }
       }
     }
 
@@ -171,5 +206,26 @@ class TxHookParser
     if(!isset($this->map_typeevent_hashes['HookDefinition_created']))
       return [];
     return \array_values(\array_unique($this->map_typeevent_hashes['HookDefinition_created']));
+  }
+
+  
+  /**
+   * Get list of installed hooks to account in this transaction.
+   */
+  public function installedHooks(): array
+  {
+    if(!isset($this->map_typeevent_hashes['Hook_installed']))
+      return [];
+    return \array_values(\array_unique($this->map_typeevent_hashes['Hook_installed']));
+  }
+
+  /**
+   * Get list of uninstalled hooks from account in this transaction.
+   */
+  public function uninstalledHooks(): array
+  {
+    if(!isset($this->map_typeevent_hashes['Hook_uninstalled']))
+      return [];
+    return \array_values(\array_unique($this->map_typeevent_hashes['Hook_uninstalled']));
   }
 }
