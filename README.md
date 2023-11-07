@@ -20,7 +20,7 @@ composer require xrplwin/xrpl-hookparser
 ```PHP
 use XRPLWin\XRPLHookParser\TxHookParser;
 
-$tx = (object)[ // Full transaction, containing Account, Destination, meta, ...)
+$tx = (object)[ // Full transaction, containing Account, Destination, meta, ...
     "Account": "rA...",
     "Amount": "100300000",
     "Destination": "rD....",
