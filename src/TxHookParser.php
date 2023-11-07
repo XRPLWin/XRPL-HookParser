@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace XRPLWin\XRPLTxHookParser;
+namespace XRPLWin\XRPLHookParser;
 
 /**
  * Transaction Hook Parser

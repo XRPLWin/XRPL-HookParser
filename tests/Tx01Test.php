@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace XRPLWin\XRPLTxHookParser\Tests;
+namespace XRPLWin\XRPLHookParser\Tests;
 
 use PHPUnit\Framework\TestCase;
-use XRPLWin\XRPLTxHookParser\TxHookParser;
+use XRPLWin\XRPLHookParser\TxHookParser;
 
 /***
  * EnableAmendment

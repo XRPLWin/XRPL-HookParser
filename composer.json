@@ -1,5 +1,5 @@
 {
-    "name": "xrplwin/xrpl-txhookparser",
+    "name": "xrplwin/xrpl-hookparser",
     "description": "Transaction Hook parser for hook-enabled XRPL/Xahau networks. ",
     "keywords": ["xrpl", "composer", "package", "xahau", "xah", "xrp", "transaction", "tx", "parser", "hook", "hooks", "perspective", "participats"],
     "license": "MIT",
@@ -13,12 +13,12 @@
     "homepage": "https://github.com/XRPLWin",
     "autoload": {
       "psr-4": {
-          "XRPLWin\\XRPLTxHookParser\\": "src/"
+          "XRPLWin\\XRPLHookParser\\": "src/"
       }
     },
     "autoload-dev": {
       "psr-4": {
-        "XRPLWin\\XRPLTxHookParser\\Tests\\": "tests/"
+        "XRPLWin\\XRPLHookParser\\Tests\\": "tests/"
       }
     },
     "minimum-stability": "dev",
