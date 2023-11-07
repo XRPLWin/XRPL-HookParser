@@ -1,0 +1,37 @@
+{
+    "name": "xrplwin/xrpl-txhookparser",
+    "description": "Transaction Hook parser for hook-enabled XRPL/Xahau networks. ",
+    "keywords": ["xrpl", "composer", "package", "xahau", "xah", "xrp", "transaction", "tx", "parser", "hook", "hooks", "perspective", "participats"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+      {
+        "name": "Zvjezdan Grgurić",
+        "email": "zgrguric@xrplwin.com"
+      }
+    ],
+    "homepage": "https://github.com/XRPLWin",
+    "autoload": {
+      "psr-4": {
+          "XRPLWin\\XRPLTxHookParser\\": "src/"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "XRPLWin\\XRPLTxHookParser\\Tests\\": "tests/"
+      }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+      "php": "^8.1.0",
+      "hardcastle/xrpl_php": "^0.8"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "^10.1",
+      "symfony/var-dumper": "^6.1"
+    },
+    "scripts": {
+      "test": "./vendor/bin/phpunit --testdox"
+    }
+  }

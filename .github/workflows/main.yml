@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PHP Action
+      uses: shivammathur/setup-php@2.21.2
+
+    - name: Install dependencies
+      run: composer install
+      
+    - name: Run unit tests
+      run: composer test
