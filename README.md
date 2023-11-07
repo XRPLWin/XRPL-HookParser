@@ -1,3 +1,7 @@
+![main workflow](https://github.com/XRPLWin/XRPL-HookParser/actions/workflows/main.yml/badge.svg)
+[![GitHub license](https://img.shields.io/github/license/XRPLWin/XRPL-HookParser)](https://github.com/XRPLWin/XRPL-HookParser/blob/main/LICENSE)
+[![Total Downloads](https://img.shields.io/packagist/dt/xrplwin/xrpl-hookparser.svg?style=flat)](https://packagist.org/packages/xrplwin/xrpl-hookparser)
+
 # HookParser
 Transaction Hook parser for hook-enabled XRPL/Xahau networks.
 
