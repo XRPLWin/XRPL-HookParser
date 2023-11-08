@@ -6,13 +6,13 @@ use PHPUnit\Framework\TestCase;
 use XRPLWin\XRPLHookParser\TxHookParser;
 
 /***
- * SetHook - hook delete
+ * SetHook - clear namespace
  */
-final class Tx06Test extends TestCase
+final class Tx07Test extends TestCase
 {
-  public function testSetHookUpdate()
+  public function testSetHookNamespaceClear()
   {
-    $transaction = file_get_contents(__DIR__.'/fixtures/tx06.json');
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx07.json');
     $transaction = \json_decode($transaction);
     $TxHookParser = new TxHookParser($transaction->result);
 
@@ -21,33 +21,31 @@ final class Tx06Test extends TestCase
     $hooks = $TxHookParser->hooks();
     $this->assertIsArray($hooks);
     $this->assertEquals([
-      'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',
+      'B1F39E63D27603F1A2E7E804E92514FAC721F353D849B0787288F5026809AD84',
     ], $hooks);
     
     # List of newly created hooks (none here)
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
     $this->assertEquals([], $createdHooks);
-
-    # List of uninstalled hooks
+    
+    # List of uninstalled hooks (none here)
     $createdHooks = $TxHookParser->uninstalledHooks();
     $this->assertIsArray($createdHooks);
-    $this->assertEquals([
-      'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7'
-    ], $createdHooks);
-
+    $this->assertEquals([], $createdHooks);
+    
     # List of all accounts
     $accounts = $TxHookParser->accounts();
     $this->assertIsArray($accounts);
     $this->assertEquals([
-      'rUXeVSNiRKGawHM9x73EmdF25HbZAH8U78',
+      'rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn',
     ], $accounts);
     
     # Specific account
-    $accountHooks = $TxHookParser->accountHooks('rUXeVSNiRKGawHM9x73EmdF25HbZAH8U78');
+    $accountHooks = $TxHookParser->accountHooks('rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn');
     $this->assertIsArray($accountHooks);
     $this->assertEquals([
-      'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7'
+      'B1F39E63D27603F1A2E7E804E92514FAC721F353D849B0787288F5026809AD84'
     ], $accountHooks);
     
     # Unrelated account
@@ -55,12 +53,11 @@ final class Tx06Test extends TestCase
     $this->assertIsArray($accountHooks);
     $this->assertEquals([], $accountHooks);
     
-    
     # Specific hook
-    $hookAccounts = $TxHookParser->hookAccounts('ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7');
+    $hookAccounts = $TxHookParser->hookAccounts('B1F39E63D27603F1A2E7E804E92514FAC721F353D849B0787288F5026809AD84');
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([
-      'rUXeVSNiRKGawHM9x73EmdF25HbZAH8U78'
+      'rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn'
     ], $hookAccounts);
     
     # Unrelated hook

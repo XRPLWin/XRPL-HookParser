@@ -1,0 +1,98 @@
+{
+  "id": 0,
+  "result": {
+      "Account": "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn",
+      "Fee": "20",
+      "Flags": 0,
+      "Hooks": [
+          {
+              "Hook": {
+                  "Flags": 2,
+                  "HookNamespace": "097692A0AA4759D14DDCDC0BBE7BA76B85248529B38F678E1D4E9E635D0FDB28"
+              }
+          }
+      ],
+      "LastLedgerSequence": 152,
+      "NetworkID": 21337,
+      "Sequence": 52,
+      "SigningPubKey": "0388935426E0D08083314842EDFBB2D517BD47699F9A4527318A8E10468C97C052",
+      "TransactionType": "SetHook",
+      "TxnSignature": "3044022024778CA0A3FA49AC2B5CBCAC510924906A762BA995C2D82E7D7C114A5AD3AC0F02205652262899261D5308D65C73B720062B239A82E265A5443019449451A98561C9",
+      "ctid": "C000008500005359",
+      "date": 747907423,
+      "hash": "A45968AE61699F7E16E11548FC7EC4544805CCEAEE7E7DEEE73C1DDFFA32F42C",
+      "inLedger": 133,
+      "ledger_index": 133,
+      "meta": {
+          "AffectedNodes": [
+              {
+                  "DeletedNode": {
+                      "FinalFields": {
+                          "Flags": 0,
+                          "HookStateData": "0100000000000000",
+                          "HookStateKey": "000000000000000000000000AE123A8556F3CF91154711376AFB0F894F832B3D",
+                          "OwnerNode": "0"
+                      },
+                      "LedgerEntryType": "HookState",
+                      "LedgerIndex": "12AAAB4BCAD190E0EFFF08A642FDF78F93C545105596E134131CC7930407B868"
+                  }
+              },
+              {
+                  "ModifiedNode": {
+                      "FinalFields": {
+                          "Account": "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn",
+                          "Flags": 0,
+                          "Hooks": [
+                              {
+                                  "Hook": {
+                                      "HookHash": "B1F39E63D27603F1A2E7E804E92514FAC721F353D849B0787288F5026809AD84"
+                                  }
+                              }
+                          ],
+                          "OwnerNode": "0"
+                      },
+                      "LedgerEntryType": "Hook",
+                      "LedgerIndex": "2448F6F57C6B3636716BDE3AD860EC7C92D1B029006770E7F396234469324934"
+                  }
+              },
+              {
+                  "ModifiedNode": {
+                      "FinalFields": {
+                          "Account": "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn",
+                          "Balance": "19995669133",
+                          "Flags": 0,
+                          "OwnerCount": 7,
+                          "Sequence": 53
+                      },
+                      "LedgerEntryType": "AccountRoot",
+                      "LedgerIndex": "92FA6A9FC8EA6018D5D16532D7795C91BFB0831355BDFDA177E86C8BF997985F",
+                      "PreviousFields": {
+                          "Balance": "19995669153",
+                          "HookNamespaces": [
+                              "097692A0AA4759D14DDCDC0BBE7BA76B85248529B38F678E1D4E9E635D0FDB28"
+                          ],
+                          "HookStateCount": 1,
+                          "Sequence": 52
+                      }
+                  }
+              },
+              {
+                  "DeletedNode": {
+                      "FinalFields": {
+                          "Flags": 0,
+                          "Owner": "rG1QQv2nh2gr7RCZ1P8YYcBUKCCN633jCn",
+                          "RootIndex": "C7DA6E45B8456F782AB4321B28BF68054C62DF37ADC880731B33D460A03D7681"
+                      },
+                      "LedgerEntryType": "DirectoryNode",
+                      "LedgerIndex": "C7DA6E45B8456F782AB4321B28BF68054C62DF37ADC880731B33D460A03D7681"
+                  }
+              }
+          ],
+          "TransactionIndex": 0,
+          "TransactionResult": "tesSUCCESS"
+      },
+      "validated": true
+  },
+  "type": "response"
+}
+

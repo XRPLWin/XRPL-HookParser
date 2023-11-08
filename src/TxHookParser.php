@@ -228,4 +228,19 @@ class TxHookParser
       return [];
     return \array_values(\array_unique($this->map_typeevent_hashes['Hook_uninstalled']));
   }
+
+  /*public function isSetHookInstall(): bool
+  {
+    return isset($this->map_typeevent_hashes['Hook_installed']);
+  }
+
+  public function isSetHookUninstall(): bool
+  {
+    return isset($this->map_typeevent_hashes['Hook_uninstalled']);
+  }
+
+  public function isSetHookNamespaceReset(): bool
+  {
+    return false;
+  }*/
 }
