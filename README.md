@@ -34,7 +34,7 @@ $tx = (object)[ // Full transaction, containing Account, Destination, meta, ...
     ...
 ];
 
-$TxHookParser = new TxHookParser($transaction->result);
+$TxHookParser = new TxHookParser($tx);
 
 // All examples below return array:
 
