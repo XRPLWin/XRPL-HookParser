@@ -1,0 +1,69 @@
+{
+    "result": {
+      "Account": "",
+      "EmitDetails": {
+        "EmitBurden": "1",
+        "EmitGeneration": 1,
+        "EmitHookHash": "C17685012D17B83C1FD911DD6505F3047477E7F145DF09BFAF89CB7A436DD9BB",
+        "EmitNonce": "F7E6630DA086BE734D5ACB881B8AD12CB8D64AFE166F0709CE6921A1DC90D9E6",
+        "EmitParentTxnID": "35914CE98DE904C616CE7AC331616CA17FDDA0683A0FA68193293F49DDE14321"
+      },
+      "Fee": "0",
+      "LedgerSequence": 145351,
+      "Sequence": 0,
+      "SigningPubKey": "",
+      "TransactionHash": "85DC0EB38441054184E744BD9FF54E67F115D3E4D00B99C9A1162794F4909032",
+      "TransactionType": "EmitFailure",
+      "date": 752421060,
+      "hash": "1EA5ED558D475245186A0111F61B23B2496AA8135503176BDC7F6735EDF6412C",
+      "inLedger": 145351,
+      "ledger_index": 145351,
+      "meta": {
+        "AffectedNodes": [
+          {
+            "DeletedNode": {
+              "FinalFields": {
+                "Flags": 4,
+                "RootIndex": "B4DE823055D00BC12CD78FE1AAF74EE6062195B2629F49A25915A39C64BE1900"
+              },
+              "LedgerEntryType": "DirectoryNode",
+              "LedgerIndex": "B4DE823055D00BC12CD78FE1AAF74EE6062195B2629F49A25915A39C64BE1900"
+            }
+          },
+          {
+            "DeletedNode": {
+              "FinalFields": {
+                "EmittedTxn": {
+                  "Account": "rHyB8fpHCTB4NhwayEtNH9DsjLue33n1ph",
+                  "Destination": "rnBA8kVE8ZxqiRnUccKEo2x1Qa6sJWDXA9",
+                  "EmitDetails": {
+                    "EmitBurden": "1",
+                    "EmitGeneration": 1,
+                    "EmitHookHash": "C17685012D17B83C1FD911DD6505F3047477E7F145DF09BFAF89CB7A436DD9BB",
+                    "EmitNonce": "F7E6630DA086BE734D5ACB881B8AD12CB8D64AFE166F0709CE6921A1DC90D9E6",
+                    "EmitParentTxnID": "35914CE98DE904C616CE7AC331616CA17FDDA0683A0FA68193293F49DDE14321"
+                  },
+                  "Fee": "10",
+                  "FirstLedgerSequence": 145346,
+                  "Flags": 2147483648,
+                  "LastLedgerSequence": 145350,
+                  "Sequence": 0,
+                  "SigningPubKey": "000000000000000000000000000000000000000000000000000000000000000000",
+                  "TransactionType": "URITokenMint",
+                  "URI": "697066733A2F2F516D503944734D356A6B6B68615466694853774741456E316557323263586546734D41715A5A424C48735A726976"
+                },
+                "Flags": 0,
+                "OwnerNode": "0"
+              },
+              "LedgerEntryType": "EmittedTxn",
+              "LedgerIndex": "ECBE62E85764940600AEF00DFE91C98BD93E414EF52B46F3396B1B4DAE490BF6"
+            }
+          }
+        ],
+        "TransactionIndex": 0,
+        "TransactionResult": "tesSUCCESS"
+      },
+      "status": "success",
+      "validated": true
+    }
+  }

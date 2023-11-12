@@ -20,14 +20,35 @@ class TxHookParser
 
   public function __construct(\stdClass $tx, array $options = [])
   {
+    //Normalize account output
+    if(isset($tx->Account) && $tx->Account === '') {
+      $tx->Account = 'rrrrrrrrrrrrrrrrrrrrrhoLvTp'; //Account ZERO, eg NULL
+    }
+
     $this->tx = $tx;
     $this->meta = isset($this->tx->meta) ? $this->tx->meta : $this->tx->metaData;
 
+    $this->extractHooksFromEmitDetails();
     $this->extractHooksFromMeta();
     $this->extractHooksFromContext();
   }
 
-  private function extractHooksFromMeta()
+  private function extractHooksFromEmitDetails(): void
+  {
+    if(!isset($this->tx->EmitDetails))
+      return;
+    if(isset($this->tx->EmitDetails->EmitHookHash)) {
+      $this->addHook(
+        $this->tx->EmitDetails->EmitHookHash,
+        $this->tx->Account,
+        'EmitDetails',
+        ($this->tx->TransactionType == 'EmitFailure' ? 'emitfail':'emitsuccess'),
+      );
+    }
+    //dd($this->tx->EmitDetails);
+  }
+
+  private function extractHooksFromMeta(): void
   {
     if(isset($this->meta->AffectedNodes)) {
       foreach($this->meta->AffectedNodes as $AffectedNode) {
