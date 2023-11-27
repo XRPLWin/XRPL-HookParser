@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use XRPLWin\XRPLHookParser\TxHookParser;
 
 /***
- * SetHook - hook delete
+ * SetHook - hook delete, Hook object deleted
  */
 final class Tx06Test extends TestCase
 {
@@ -35,6 +35,16 @@ final class Tx06Test extends TestCase
     $this->assertEquals([
       'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7'
     ], $createdHooks);
+
+    # List of installed hooks
+    $createdHooks = $TxHookParser->installedHooks();
+    $this->assertIsArray($createdHooks);
+    $this->assertEquals([], $createdHooks);
+
+    # List of destroyed hooks
+    $destroyedHooks = $TxHookParser->destroyedHooks();
+    $this->assertIsArray($destroyedHooks);
+    $this->assertEquals([], $destroyedHooks);
 
     # List of all accounts
     $accounts = $TxHookParser->accounts();

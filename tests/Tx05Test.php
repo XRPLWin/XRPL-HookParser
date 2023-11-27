@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use XRPLWin\XRPLHookParser\TxHookParser;
 
 /***
- * SetHook - hook update
+ * SetHook - install new hook, Hook object already previously created and at one point deleted (null prev fields).
  */
 final class Tx05Test extends TestCase
 {
@@ -17,17 +17,21 @@ final class Tx05Test extends TestCase
     $TxHookParser = new TxHookParser($transaction->result);
 
     # List of all hooks
-    
     $hooks = $TxHookParser->hooks();
     $this->assertIsArray($hooks);
     $this->assertEquals([
       '012FD32EDF56C26C0C8919E432E15A5F242CC1B31AF814D464891C560465613B',
     ], $hooks);
-    
+   
     # List of newly created hooks (none here)
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
     $this->assertEquals([], $createdHooks);
+
+    # List of modified hooks
+    $modifiedHooks = $TxHookParser->modifiedHooks();
+    $this->assertIsArray($modifiedHooks);
+    $this->assertEquals([], $modifiedHooks);
     
     # List of all accounts
     $accounts = $TxHookParser->accounts();

@@ -7,13 +7,13 @@ use XRPLWin\XRPLHookParser\TxHookParser;
 
 /***
  * SetHook
- * - in this transaction: 1 created/installed hook, 1 destroyed/uninstalled hook
+ * - in this transaction: Replaced 2 hooks with 2 new, both destroyed and created
  */
-final class Tx09Test extends TestCase
+final class Tx11Test extends TestCase
 {
-  public function testSetHookExtractDestroyedHook()
+  public function testSetHookCreated()
   {
-    $transaction = file_get_contents(__DIR__.'/fixtures/tx09.json');
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx11.json');
     $transaction = \json_decode($transaction);
     $TxHookParser = new TxHookParser($transaction->result);
 
@@ -22,39 +22,50 @@ final class Tx09Test extends TestCase
     $hooks = $TxHookParser->hooks();
     $this->assertIsArray($hooks);
     $this->assertEquals([
+      'B8A38F9E5D7249C14D45838687E28AF0A615EF5EB868B3D367D33B050CBA7FF0',
       '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A',
-      'B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648',
       'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
+      '0E277C6F5DE7E8CA7482FCAA381CB77E93D8D595796B4ED79B5489C9A28A9DDD',
     ], $hooks);
-    
-    # List of newly created hooks
+
+    # List of newly created hook definitions
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
     $this->assertEquals([
-      'B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648'
+      '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A',
+      'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
     ], $createdHooks);
     
+
     # List of destroyed hook definitions
     $destroyedHooks = $TxHookParser->destroyedHooks();
     $this->assertIsArray($destroyedHooks);
     $this->assertEquals([
-      '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A'
+      'B8A38F9E5D7249C14D45838687E28AF0A615EF5EB868B3D367D33B050CBA7FF0',
+      '0E277C6F5DE7E8CA7482FCAA381CB77E93D8D595796B4ED79B5489C9A28A9DDD'
     ], $destroyedHooks);
     
-    # List of uninstalled hooks
-    $uninstalledHooks = $TxHookParser->uninstalledHooks();
-    $this->assertIsArray($uninstalledHooks);
+
+    # List of installed hooks
+    $createdHooks = $TxHookParser->installedHooks();
+    $this->assertIsArray($createdHooks);
     $this->assertEquals([
+      'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
       '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A'
-    ], $uninstalledHooks);
+    ], $createdHooks);
+
+    # List of uninstalled hooks
+    $createdHooks = $TxHookParser->uninstalledHooks();
+    $this->assertIsArray($createdHooks);
+    $this->assertEquals([
+      '0E277C6F5DE7E8CA7482FCAA381CB77E93D8D595796B4ED79B5489C9A28A9DDD',
+      'B8A38F9E5D7249C14D45838687E28AF0A615EF5EB868B3D367D33B050CBA7FF0'
+    ], $createdHooks);
 
     # List of modified hooks
     $modifiedHooks = $TxHookParser->modifiedHooks();
-    //dd($modifiedHooks);
     $this->assertIsArray($modifiedHooks);
-    $this->assertEquals([
-      'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
-    ], $modifiedHooks);
+    $this->assertEquals([], $modifiedHooks);
     
     # List of all accounts
     $accounts = $TxHookParser->accounts();
@@ -67,25 +78,26 @@ final class Tx09Test extends TestCase
     $accountHooks = $TxHookParser->accountHooks('r223rsyz1cfqPbjmiX6oYu1hFgNwCkWZH');
     $this->assertIsArray($accountHooks);
     $this->assertEquals([
-      'B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648',
-      '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A',
       'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
+      '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A',
+      '0E277C6F5DE7E8CA7482FCAA381CB77E93D8D595796B4ED79B5489C9A28A9DDD',
+      'B8A38F9E5D7249C14D45838687E28AF0A615EF5EB868B3D367D33B050CBA7FF0'
     ], $accountHooks);
-    
+
     # Unrelated account
     $accountHooks = $TxHookParser->accountHooks('rQJecEU8BT5NmQvdjEtHRwTC2XLwxgkCpE');
     $this->assertIsArray($accountHooks);
     $this->assertEquals([], $accountHooks);
     
-    # Specific installed hook
-    $hookAccounts = $TxHookParser->hookAccounts('B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648');
+    # Specific hook 1
+    $hookAccounts = $TxHookParser->hookAccounts('B8A38F9E5D7249C14D45838687E28AF0A615EF5EB868B3D367D33B050CBA7FF0');
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([
       'r223rsyz1cfqPbjmiX6oYu1hFgNwCkWZH'
     ], $hookAccounts);
 
-    # Specific uninstalled hook
-    $hookAccounts = $TxHookParser->hookAccounts('09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A');
+    # Specific hook 2
+    $hookAccounts = $TxHookParser->hookAccounts('0E277C6F5DE7E8CA7482FCAA381CB77E93D8D595796B4ED79B5489C9A28A9DDD');
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([
       'r223rsyz1cfqPbjmiX6oYu1hFgNwCkWZH'

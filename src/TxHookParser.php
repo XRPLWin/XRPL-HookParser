@@ -88,8 +88,8 @@ class TxHookParser
             switch($AffectedNode->ModifiedNode->LedgerEntryType) {
               case 'Hook':
                 $parsed = $this->hookChangesFromModifiedHookNode(
-                  $AffectedNode->ModifiedNode->PreviousFields->Hooks,
-                  $AffectedNode->ModifiedNode->FinalFields->Hooks
+                  (isset($AffectedNode->ModifiedNode->PreviousFields) && $AffectedNode->ModifiedNode->PreviousFields)?$AffectedNode->ModifiedNode->PreviousFields->Hooks:null,
+                  (isset($AffectedNode->ModifiedNode->FinalFields) && $AffectedNode->ModifiedNode->FinalFields)?$AffectedNode->ModifiedNode->FinalFields->Hooks:null
                 );
                 if(count($parsed['added'])) {
                   foreach($parsed['added'] as $h => $hv) {
@@ -186,7 +186,7 @@ class TxHookParser
   private function normalizeHookNode(\stdClass $node): array
   {
     $n = (array)$node;
-    if(!isset($n['Flags'])) $n['Flags'] = 0;
+    //if(!isset($n['Flags'])) $n['Flags'] = 0;
     \ksort($n);
     return $n;
   }
@@ -200,12 +200,14 @@ class TxHookParser
     $tracker = [];
 
     foreach($prev as $p) {
+      if(!isset($p->Hook->HookHash)) continue;
       $h = $p->Hook->HookHash;
       $contents = $this->normalizeHookNode($p->Hook);
       $tracker[$h] = ['state' => 1, 'hsh' => [\json_encode($contents)]];
     }
     
     foreach($final as $p) {
+      if(!isset($p->Hook->HookHash)) continue;
       $h = $p->Hook->HookHash;
       $contents = $this->normalizeHookNode($p->Hook);
       if(!isset($tracker[$h])) {
