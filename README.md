@@ -46,16 +46,24 @@ $accounts = $TxHookParser->accounts();
 $accountHooks = $TxHookParser->accountHooks('raddress...');
 # List of accounts by hook
 $hookAccounts = $TxHookParser->hookAccounts('5EDF6...2DC77');
+
 # List of newly created hooks (new HookDefinition created)
 $createdHooks = $TxHookParser->createdHooks();
+# Check if specific hook is created
+$isCreated = $TxHookParser->isHookCreated('5EDF6...2DC77');
+
 # List of destroyed hooks (HookDefinition deleted)
 $destroyedHooks = $TxHookParser->destroyedHooks();
-# List of account uninstalled hooks (eg. SetHook transaction)
+# Check if specific hook is destroyed
+$isDestroyed = $TxHookParser->isHookDestroyed('5EDF6...2DC77');
+
+# List of uninstalled hooks (eg. SetHook transaction)
 $uninstalledHooks = $TxHookParser->uninstalledHooks();
-# List of account installed hooks (eg. SetHook transaction)
+# List of installed hooks (eg. SetHook transaction)
 $installedHooks = $TxHookParser->installedHooks();
-# List of account modified hooks
+# List of modified hooks
 $modifiedHooks = $TxHookParser->modifiedHooks();
+
 ```
 
 ## Running tests

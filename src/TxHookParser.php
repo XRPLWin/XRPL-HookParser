@@ -333,6 +333,14 @@ class TxHookParser
   }
 
   /**
+   * Check if specific hook is created
+   */
+  public function isHookCreated(string $hookhash): bool
+  {
+    return (\in_array($hookhash, $this->createdHooks()));
+  }
+
+  /**
    * Get list of destroyed hooks (deleted HookDefinition).
    */
   public function destroyedHooks(): array
@@ -340,6 +348,14 @@ class TxHookParser
     if(!isset($this->map_typeevent_hashes['HookDefinition_destroyed']))
       return [];
     return \array_values(\array_unique($this->map_typeevent_hashes['HookDefinition_destroyed']));
+  }
+
+  /**
+   * Check if specific hook is created
+   */
+  public function isHookDestroyed(string $hookhash): bool
+  {
+    return (\in_array($hookhash, $this->destroyedHooks()));
   }
 
   
