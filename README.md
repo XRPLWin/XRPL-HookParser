@@ -66,6 +66,45 @@ $modifiedHooks = $TxHookParser->modifiedHooks();
 
 ```
 
+### HookOn field
+See https://richardah.github.io/xrpl-hookon-calculator/ for reference.
+
+Decode HookOnString
+```PHP
+use XRPLWin\XRPLHookParser\HookOn;
+
+$triggered = HookOn::decode('0xfffffffffffffffffffffffffffffffffffffff7fffffffffffc1fffffc00a40'); //array
+/*
+$triggered = array:26 [
+  0 => "ttPAYMENT"
+  1 => "ttESCROW_CREATE"
+  ...
+]
+*/
+//No triggers in this sample:
+HookOn::decode('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff');
+//Works without prefix:
+HookOn::decode('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff');
+//Works with uppercase and lowercase:
+HookOn::decode('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFF');
+HookOn::decode('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFF');
+HookOn::decode('0XFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFF');
+```
+
+Encode HookOnString
+```PHP
+use XRPLWin\XRPLHookParser\HookOn;
+
+HookOn::encode([HookOn::ttACCOUNT_DELETE]);
+//= (string)'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9fffff'
+
+HookOn::encode([]);
+//= (string)'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff'
+
+HookOn::encode([HookOn::ttACCOUNT_DELETE,HookOn::ttACCOUNT_SET]);
+//= (string)'0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9ffff7'
+```
+
 ## Running tests
 Run all tests in "tests" directory.
 ```

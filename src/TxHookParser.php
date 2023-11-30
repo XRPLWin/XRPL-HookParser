@@ -2,8 +2,6 @@
 
 namespace XRPLWin\XRPLHookParser;
 
-use stdClass;
-
 /**
  * Transaction Hook Parser
  * Extract list of HookHash
