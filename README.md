@@ -49,6 +49,8 @@ $hookAccounts = $TxHookParser->hookAccounts('5EDF6...2DC77');
 
 # List of newly created hooks (new HookDefinition created)
 $createdHooks = $TxHookParser->createdHooks();
+# List of newly created hooks - detailed
+$createdHooksDetails = $TxHookParser->createdHooksDetailed();
 # Check if specific hook is created
 $isCreated = $TxHookParser->isHookCreated('5EDF6...2DC77');
 
