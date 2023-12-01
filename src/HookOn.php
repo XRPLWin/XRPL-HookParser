@@ -18,7 +18,7 @@ class HookOn
   const DEFAULT = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff';
 
   /**
-   * TT codes
+   * TT codes (https://github.com/Xahau/xahaud/blob/dev/hook/tts.h)
    */
   const ttPAYMENT = 0;
   const ttESCROW_CREATE = 1;
@@ -26,9 +26,11 @@ class HookOn
   const ttACCOUNT_SET = 3;
   const ttESCROW_CANCEL = 4;
   const ttREGULAR_KEY_SET = 5;
+  //const ttNICKNAME_SET = 6; //deprecated
   const ttOFFER_CREATE = 7;
   const ttOFFER_CANCEL = 8;
   const ttTICKET_CREATE = 10;
+  //const ttSPINAL_TAP = 11; //deprecated
   const ttSIGNER_LIST_SET = 12;
   const ttPAYCHAN_CREATE = 13;
   const ttPAYCHAN_FUND = 14;
@@ -40,12 +42,26 @@ class HookOn
   const ttTRUST_SET = 20;
   const ttACCOUNT_DELETE = 21;
   const ttHOOK_SET = 22;
+  const ttNFTOKEN_MINT = 25; //Private
+  const ttNFTOKEN_BURN = 26; //Private
+  const ttNFTOKEN_CREATE_OFFER = 27; //Private
+  const ttNFTOKEN_CANCEL_OFFER = 28; //Private
+  const ttNFTOKEN_ACCEPT_OFFER = 29; //Private
   const ttURITOKEN_MINT = 45;
   const ttURITOKEN_BURN = 46;
   const ttURITOKEN_BUY = 47;
   const ttURITOKEN_CREATE_SELL_OFFER = 48;
   const ttURITOKEN_CANCEL_SELL_OFFER = 49;
+  const ttGENESIS_MINT = 96; //Private
+  const ttIMPORT = 97; //Private
+  const ttCLAIM_REWARD = 98; //Private
   const ttINVOKE = 99;
+  const ttAMENDMENT = 100; //Private
+  const ttFEE = 101; //Private
+  const ttUNL_MODIFY = 102; //Private
+  const ttEMIT_FAILURE = 103; //Private
+  const ttUNL_REPORT = 104; //Private
+
 
   const MAP = [
     0 => 'ttPAYMENT',
@@ -54,9 +70,11 @@ class HookOn
     3 => 'ttACCOUNT_SET',
     4 => 'ttESCROW_CANCEL',
     5 => 'ttREGULAR_KEY_SET',
+    //6 => 'ttNICKNAME_SET',
     7 => 'ttOFFER_CREATE',
     8 => 'ttOFFER_CANCEL',
     10 => 'ttTICKET_CREATE',
+    //11 => 'ttSPINAL_TAP',
     12 => 'ttSIGNER_LIST_SET',
     13 => 'ttPAYCHAN_CREATE',
     14 => 'ttPAYCHAN_FUND',
@@ -68,12 +86,25 @@ class HookOn
     20 => 'ttTRUST_SET',
     21 => 'ttACCOUNT_DELETE',
     22 => 'ttHOOK_SET',
+    25 => 'ttNFTOKEN_MINT',
+    26 => 'ttNFTOKEN_BURN',
+    27 => 'ttNFTOKEN_CREATE_OFFER',
+    28 => 'ttNFTOKEN_CANCEL_OFFER',
+    29 => 'ttNFTOKEN_ACCEPT_OFFER',
     45 => 'ttURITOKEN_MINT',
     46 => 'ttURITOKEN_BURN',
     47 => 'ttURITOKEN_BUY',
     48 => 'ttURITOKEN_CREATE_SELL_OFFER',
     49 => 'ttURITOKEN_CANCEL_SELL_OFFER',
+    96 => 'ttGENESIS_MINT',
+    97 => 'ttIMPORT',
+    98 => 'ttCLAIM_REWARD',
     99 => 'ttINVOKE',
+    100 => 'ttAMENDMENT',
+    101 => 'ttFEE',
+    102 => 'ttUNL_MODIFY',
+    103 => 'ttEMIT_FAILURE',
+    104 => 'ttUNL_REPORT',
   ];
 
   public static function normalize(string $hookonvalue): string
@@ -104,7 +135,7 @@ class HookOn
       if($n != 22) $trigger = !$trigger; //ttHOOK_SET is flipped (prevents accidental account bricking)
       if($trigger) {
         if(!isset(self::MAP[$n]))
-          throw new \Exception('Invalid hookon value');
+          throw new \Exception('Invalid hookon value for hookon: "'.$hookonvalue.'" on position '.$n.' see https://github.com/Xahau/xahaud/blob/dev/hook/tts.h');
         $triggers[$n] = self::MAP[$n];
       }
       $v = $v->shiftedRight(1);

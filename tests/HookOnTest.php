@@ -93,15 +93,45 @@ final class HookOnTest extends TestCase
     $triggered = HookOn::decode($hookon);
     $this->assertEquals([21 => 'ttACCOUNT_DELETE', 3 => 'ttACCOUNT_SET'],$triggered);
 
-    //ALL triggers
+    //ALL (public) triggers
     $hookon = '0xfffffffffffffffffffffffffffffffffffffff7fffffffffffc1fffffc00a40';
     $triggered = HookOn::decode($hookon);
-    $this->assertEquals(HookOn::MAP,$triggered);
+    $expected = HookOn::MAP;
+    //Following are "private" triggers, as documented absent in https://richardah.github.io/xrpl-hookon-calculator
+    unset($expected[HookOn::ttNFTOKEN_MINT]);
+    unset($expected[HookOn::ttNFTOKEN_BURN]);
+    unset($expected[HookOn::ttNFTOKEN_CREATE_OFFER]);
+    unset($expected[HookOn::ttNFTOKEN_CANCEL_OFFER]);
+    unset($expected[HookOn::ttNFTOKEN_ACCEPT_OFFER]);
+    unset($expected[HookOn::ttGENESIS_MINT]);
+    unset($expected[HookOn::ttIMPORT]);
+    unset($expected[HookOn::ttCLAIM_REWARD]);
+    unset($expected[HookOn::ttAMENDMENT]);
+    unset($expected[HookOn::ttFEE]);
+    unset($expected[HookOn::ttUNL_MODIFY]);
+    unset($expected[HookOn::ttEMIT_FAILURE]);
+    unset($expected[HookOn::ttUNL_REPORT]);
+    $this->assertEquals($expected,$triggered);
 
     //ALL triggers except TRUST_SET
     $hookon = '0xfffffffffffffffffffffffffffffffffffffff7fffffffffffc1fffffd00a40';
     $triggered = HookOn::decode($hookon);
     $expected = HookOn::MAP;
+    //Following are "private" triggers, as documented absent in https://richardah.github.io/xrpl-hookon-calculator
+    unset($expected[HookOn::ttNFTOKEN_MINT]);
+    unset($expected[HookOn::ttNFTOKEN_BURN]);
+    unset($expected[HookOn::ttNFTOKEN_CREATE_OFFER]);
+    unset($expected[HookOn::ttNFTOKEN_CANCEL_OFFER]);
+    unset($expected[HookOn::ttNFTOKEN_ACCEPT_OFFER]);
+    unset($expected[HookOn::ttGENESIS_MINT]);
+    unset($expected[HookOn::ttIMPORT]);
+    unset($expected[HookOn::ttCLAIM_REWARD]);
+    unset($expected[HookOn::ttAMENDMENT]);
+    unset($expected[HookOn::ttFEE]);
+    unset($expected[HookOn::ttUNL_MODIFY]);
+    unset($expected[HookOn::ttEMIT_FAILURE]);
+    unset($expected[HookOn::ttUNL_REPORT]);
+    //Remove "public" trust set
     unset($expected[HookOn::ttTRUST_SET]);
     $this->assertEquals($expected,$triggered);
   }
