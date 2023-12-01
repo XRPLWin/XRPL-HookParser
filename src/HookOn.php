@@ -97,7 +97,7 @@ class HookOn
   public static function decode(string $hookonvalue): array
   {
     $triggers = [];
-    $v = BigInteger::of(self::normalize(self::bchexdec($hookonvalue)));
+    $v = BigInteger::of(self::bchexdec(self::normalize($hookonvalue)));
     for ($n = 0; $n < 256; $n++) {
       $trigger = (string)$v->and(1); //Bitwise AND assignment
       $trigger = ($trigger == '1') ? true:false;
@@ -131,8 +131,7 @@ class HookOn
     $v = self::normalize($hookonvalue);
     $v = BigInteger::of(self::bchexdec($v)); //OK
     $v = $v->xor((1 << $trigger)); //Bitwise XOR assignment
-    $s = self::base_convert_arbitrary((string)$v,10,16); //eg ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff
-    return $s;
+    return self::base_convert_arbitrary((string)$v,10,16); //eg ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff
   }
 
   /**
