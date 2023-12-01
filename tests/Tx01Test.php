@@ -62,4 +62,16 @@ final class Tx01Test extends TestCase
       'r4FRPZbLnyuVeGiSi1Ap6uaaPvPXYZh1XN',
     ], $hookAccounts);
   }
+
+  public function testEnableAmendmentCreatedHooks()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx01.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
+
+    $created = $TxHookParser->createdHooksDetailed();
+    $this->assertIsArray($created);
+    $this->assertEquals(2,count($created));
+    $this->assertEquals('HookDefinition',$created['610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864']->LedgerEntryType);
+  }
 }

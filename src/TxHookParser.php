@@ -16,6 +16,7 @@ class TxHookParser
   private array $map_account_hash = [];
   private array $map_hashes = [];
   private array $map_typeevent_hashes = [];
+  private array $map_created_hook_details = [];
   //private array $result = [];
 
   public function __construct(\stdClass $tx, array $options = [])
@@ -62,6 +63,7 @@ class TxHookParser
                   'HookDefinition',
                   'created'
                 );
+                $this->addCreatedHookDetails($AffectedNode->CreatedNode->NewFields->HookHash,$AffectedNode->CreatedNode);
                 break;
               case 'Hook':
                 foreach($AffectedNode->CreatedNode->NewFields->Hooks as $hook) {
@@ -148,6 +150,7 @@ class TxHookParser
                   'HookDefinition',
                   'destroyed'
                 );
+                
                 break;
               case 'Hook':
                 foreach($AffectedNode->DeletedNode->FinalFields->Hooks as $hook) {
@@ -276,6 +279,11 @@ class TxHookParser
     }
   }
 
+  private function addCreatedHookDetails(string $hookHash, \stdClass $data)
+  {
+    $this->map_created_hook_details[$hookHash] = $data;
+  }
+
   # PUBLIC METHODS:
 
   /**
@@ -322,12 +330,22 @@ class TxHookParser
 
   /**
    * Get list of newly created hooks (new HookDefinition).
+   * @return array
    */
   public function createdHooks(): array
   {
     if(!isset($this->map_typeevent_hashes['HookDefinition_created']))
       return [];
     return \array_values(\array_unique($this->map_typeevent_hashes['HookDefinition_created']));
+  }
+
+  /**
+   * Get detailed hook definitions
+   * @return array
+   */
+  public function createdHooksDetailed(): array
+  {
+    return $this->map_created_hook_details;
   }
 
   /**
