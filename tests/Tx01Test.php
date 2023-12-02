@@ -69,9 +69,13 @@ final class Tx01Test extends TestCase
     $transaction = \json_decode($transaction);
     $TxHookParser = new TxHookParser($transaction->result);
 
-    $created = $TxHookParser->createdHooksDetailed();
-    $this->assertIsArray($created);
-    $this->assertEquals(2,count($created));
-    $this->assertEquals('HookDefinition',$created['610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864']->LedgerEntryType);
+    $createdHooksDetailed = $TxHookParser->createdHooksDetailed();
+    $this->assertIsArray($createdHooksDetailed);
+    $this->assertEquals(2,count($createdHooksDetailed));
+    $this->assertEquals('HookDefinition',$createdHooksDetailed['610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864']->LedgerEntryType);
+
+    $params = TxHookParser::toParams($createdHooksDetailed['610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864']);
+    $this->assertIsArray($params);
+    $this->assertEmpty($params); //no initial params defined in hook install
   }
 }

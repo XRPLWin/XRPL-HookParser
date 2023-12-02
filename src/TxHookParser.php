@@ -402,18 +402,23 @@ class TxHookParser
     return \array_values(\array_unique($this->map_typeevent_hashes['Hook_modified']));
   }
 
-  /*public function isSetHookInstall(): bool
-  {
-    return isset($this->map_typeevent_hashes['Hook_installed']);
-  }
+  # Static
 
-  public function isSetHookUninstall(): bool
+  /**
+   * Takes just created hookdefinition and returns key value parameters.
+   * @param \stdClass $hookDefinition
+   * @return array
+   */
+  public static function toParams(\stdClass $hookDefinition): array
   {
-    return isset($this->map_typeevent_hashes['Hook_uninstalled']);
-  }
+    $params = [];
+    if(!isset($hookDefinition->NewFields->HookParameters))
+      return $params;
 
-  public function isSetHookNamespaceReset(): bool
-  {
-    return false;
-  }*/
+    $HookParameters = $hookDefinition->NewFields->HookParameters;
+    foreach($HookParameters as $p) {
+      $params[$p->HookParameter->HookParameterName] = $p->HookParameter->HookParameterValue;
+    }
+    return $params;
+  }
 }
