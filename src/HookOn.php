@@ -125,7 +125,7 @@ class HookOn
    * @param string $hookonvalue - 0xfff... or 0xFFF... or FFF... or fff..
    * @return array list of triggers
    */
-  public static function decode(string $hookonvalue): array
+  public static function decode(string $hookonvalue, bool $throwOnInvalid = true): array
   {
     $triggers = [];
     $v = BigInteger::of(self::bchexdec(self::normalize($hookonvalue)));
@@ -134,9 +134,14 @@ class HookOn
       $trigger = ($trigger == '1') ? true:false;
       if($n != 22) $trigger = !$trigger; //ttHOOK_SET is flipped (prevents accidental account bricking)
       if($trigger) {
-        if(!isset(self::MAP[$n]))
-          throw new \Exception('Invalid hookon value for hookon: "'.$hookonvalue.'" on position '.$n.' see https://github.com/Xahau/xahaud/blob/dev/hook/tts.h');
-        $triggers[$n] = self::MAP[$n];
+        if(!isset(self::MAP[$n])) {
+          if($throwOnInvalid)
+            throw new \Exception('Invalid hookon value for hookon: "'.$hookonvalue.'" on position '.$n.' see https://github.com/Xahau/xahaud/blob/dev/hook/tts.h');
+          else 
+            $triggers[$n] = null;
+        } else {
+          $triggers[$n] = self::MAP[$n];
+        }
       }
       $v = $v->shiftedRight(1);
     }

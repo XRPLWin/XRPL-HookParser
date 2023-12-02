@@ -140,12 +140,21 @@ final class HookOnTest extends TestCase
     $this->assertEquals($expected,$triggered);
   }
 
-  /*public function testDecodeInvalid()
+  public function testDecodeInvalidShouldThrowError()
   {
-    $hookon = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9ffffz';
+    $hookon = '0x000000000000000000000000000000000000000000000000000000003e3ff5be';
     $this->expectException(\Exception::class);
-    HookOn::decode($hookon); //This should throw error
-  }*/
-  
+    HookOn::decode($hookon);
+  }
+
+  public function testDecodeInvalid()
+  {
+    $hookon = '0x000000000000000000000000000000000000000000000000000000003e3ff5be';
+    $decoded = HookOn::decode($hookon,false);
+   
+    $this->assertEquals('ttPAYMENT', $decoded[0]);
+    $this->assertEquals(null, $decoded[9]);
+    $this->assertEquals(null, $decoded[255]);
+  }
 
 }
