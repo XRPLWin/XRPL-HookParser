@@ -26,11 +26,11 @@ class HookOn
   const ttACCOUNT_SET = 3;
   const ttESCROW_CANCEL = 4;
   const ttREGULAR_KEY_SET = 5;
-  //const ttNICKNAME_SET = 6; //deprecated
+  const ttNICKNAME_SET = 6; //deprecated
   const ttOFFER_CREATE = 7;
   const ttOFFER_CANCEL = 8;
   const ttTICKET_CREATE = 10;
-  //const ttSPINAL_TAP = 11; //deprecated
+  const ttSPINAL_TAP = 11; //deprecated
   const ttSIGNER_LIST_SET = 12;
   const ttPAYCHAN_CREATE = 13;
   const ttPAYCHAN_FUND = 14;
@@ -70,11 +70,11 @@ class HookOn
     3 => 'ttACCOUNT_SET',
     4 => 'ttESCROW_CANCEL',
     5 => 'ttREGULAR_KEY_SET',
-    //6 => 'ttNICKNAME_SET',
+    6 => 'ttNICKNAME_SET', //deprecated
     7 => 'ttOFFER_CREATE',
     8 => 'ttOFFER_CANCEL',
     10 => 'ttTICKET_CREATE',
-    //11 => 'ttSPINAL_TAP',
+    11 => 'ttSPINAL_TAP', //deprecated
     12 => 'ttSIGNER_LIST_SET',
     13 => 'ttPAYCHAN_CREATE',
     14 => 'ttPAYCHAN_FUND',

@@ -111,6 +111,8 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttUNL_MODIFY]);
     unset($expected[HookOn::ttEMIT_FAILURE]);
     unset($expected[HookOn::ttUNL_REPORT]);
+    unset($expected[HookOn::ttNICKNAME_SET]);
+    unset($expected[HookOn::ttSPINAL_TAP]);
     $this->assertEquals($expected,$triggered);
 
     //ALL triggers except TRUST_SET
@@ -131,6 +133,8 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttUNL_MODIFY]);
     unset($expected[HookOn::ttEMIT_FAILURE]);
     unset($expected[HookOn::ttUNL_REPORT]);
+    unset($expected[HookOn::ttNICKNAME_SET]);
+    unset($expected[HookOn::ttSPINAL_TAP]);
     //Remove "public" trust set
     unset($expected[HookOn::ttTRUST_SET]);
     $this->assertEquals($expected,$triggered);
