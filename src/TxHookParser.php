@@ -89,7 +89,8 @@ class TxHookParser
               case 'Hook':
                 $parsed = $this->hookChangesFromModifiedHookNode(
                   (isset($AffectedNode->ModifiedNode->PreviousFields) && $AffectedNode->ModifiedNode->PreviousFields)?$AffectedNode->ModifiedNode->PreviousFields->Hooks:null,
-                  (isset($AffectedNode->ModifiedNode->FinalFields) && $AffectedNode->ModifiedNode->FinalFields)?$AffectedNode->ModifiedNode->FinalFields->Hooks:null
+                  (isset($AffectedNode->ModifiedNode->FinalFields) && $AffectedNode->ModifiedNode->FinalFields)?$AffectedNode->ModifiedNode->FinalFields->Hooks:null,
+                  isset($AffectedNode->ModifiedNode->PreviousFields)
                 );
                 if(count($parsed['added'])) {
                   foreach($parsed['added'] as $h => $hv) {
@@ -192,8 +193,12 @@ class TxHookParser
     return $n;
   }
 
-  private function hookChangesFromModifiedHookNode(?array $prev, ?array $final): array
+  private function hookChangesFromModifiedHookNode(?array $prev, ?array $final, bool $prevFieldsSet): array
   {
+    //flag to indicate modification of hook (prev does not exist in modified node)
+    //ledger does not include previous fields when there is no changes
+    $is_modify = !$prevFieldsSet;
+
     $prev = $prev === null?[]:$prev;
     $final = $final === null?[]:$final;
 
@@ -218,12 +223,14 @@ class TxHookParser
         $tracker[$h]['state']++;
       }
     }
-
     foreach($tracker as $h => $data) {
       $state = $data['state'];
       if($state === 0) {
         //hook added
-        $r['added'][$h] = true;
+        if($is_modify)
+          $r['modified'][$h] = true;
+        else
+          $r['added'][$h] = true;
       } else if($state === 1) {
         //hook removed
         $r['removed'][$h] = true;

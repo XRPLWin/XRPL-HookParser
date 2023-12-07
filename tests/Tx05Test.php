@@ -31,7 +31,9 @@ final class Tx05Test extends TestCase
     # List of modified hooks
     $modifiedHooks = $TxHookParser->modifiedHooks();
     $this->assertIsArray($modifiedHooks);
-    $this->assertEquals([], $modifiedHooks);
+    $this->assertEquals([
+      '012FD32EDF56C26C0C8919E432E15A5F242CC1B31AF814D464891C560465613B', //modified but unchanged
+    ], $modifiedHooks);
     
     # List of all accounts
     $accounts = $TxHookParser->accounts();
