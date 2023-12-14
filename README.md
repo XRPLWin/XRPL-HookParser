@@ -63,8 +63,12 @@ $isDestroyed = $TxHookParser->isHookDestroyed('5EDF6...2DC77');
 
 # List of uninstalled hooks (eg. SetHook transaction)
 $uninstalledHooks = $TxHookParser->uninstalledHooks();
+# List of uninstalled hooks with num uninstalls
+$uninstalledHooksStats = $TxHookParser->uninstalledHooksStats();
 # List of installed hooks (eg. SetHook transaction)
 $installedHooks = $TxHookParser->installedHooks();
+# List of installed hooks with num installs
+$installedHooksStats = $TxHookParser->installedHooksStats();
 # List of modified hooks
 $modifiedHooks = $TxHookParser->modifiedHooks();
 

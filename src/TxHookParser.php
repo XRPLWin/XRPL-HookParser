@@ -392,6 +392,24 @@ class TxHookParser
     return \array_values(\array_unique($this->map_typeevent_hashes['Hook_installed']));
   }
 
+
+  /**
+   * Get list of hooks and number of installations.
+   * @return array [[ hookhash => num_installs], ...]
+   */
+  public function installedHooksStats(): array
+  {
+    if(!isset($this->map_typeevent_hashes['Hook_installed']))
+      return [];
+    $collect = [];
+    foreach($this->map_typeevent_hashes['Hook_installed'] as $h) {
+      if(!isset($collect[$h]))
+        $collect[$h] = 0;
+      $collect[$h]++;
+    }
+    return $collect;
+  }
+
   /**
    * Get list of uninstalled hooks from account in this transaction.
    */
@@ -400,6 +418,23 @@ class TxHookParser
     if(!isset($this->map_typeevent_hashes['Hook_uninstalled']))
       return [];
     return \array_values(\array_unique($this->map_typeevent_hashes['Hook_uninstalled']));
+  }
+
+  /**
+   * Get list of hooks and number of installations.
+   * @return array [[ hookhash => num_installs], ...]
+   */
+  public function uninstalledHooksStats(): array
+  {
+    if(!isset($this->map_typeevent_hashes['Hook_uninstalled']))
+      return [];
+    $collect = [];
+    foreach($this->map_typeevent_hashes['Hook_uninstalled'] as $h) {
+      if(!isset($collect[$h]))
+        $collect[$h] = 0;
+      $collect[$h]++;
+    }
+    return $collect;
   }
 
   public function modifiedHooks(): array

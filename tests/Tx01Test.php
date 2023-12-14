@@ -24,6 +24,23 @@ final class Tx01Test extends TestCase
       '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77'
     ], $hooks);
 
+    # Installed hooks
+    $installedHooks = $TxHookParser->installedHooks();
+    $this->assertIsArray($hooks);
+    $this->assertEquals([
+      '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',
+      '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864'
+    ], $installedHooks);
+
+    $installedHooksStats = $TxHookParser->installedHooksStats();
+    $this->assertEquals([
+      '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77' => 5,
+      '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864' => 1
+    ], $installedHooksStats);
+
+    $uninstalledHooksStats = $TxHookParser->uninstalledHooksStats();
+    $this->assertEquals([], $uninstalledHooksStats);
+
     # List of newly created hooks
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
