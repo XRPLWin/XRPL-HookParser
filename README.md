@@ -72,6 +72,9 @@ $installedHooksStats = $TxHookParser->installedHooksStats();
 # List of modified hooks
 $modifiedHooks = $TxHookParser->modifiedHooks();
 
+# Manual data lookup (lookup any combination of mapped data)
+$lookup = $TxHookParser->lookup('raddress...','Hook','installed');
+
 ```
 
 ### HookOn field

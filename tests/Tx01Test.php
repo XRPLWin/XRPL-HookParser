@@ -78,6 +78,25 @@ final class Tx01Test extends TestCase
       'r6QZ6zfK37ZSec5hWiQDtbTxUaU2NWG3F',
       'r4FRPZbLnyuVeGiSi1Ap6uaaPvPXYZh1XN',
     ], $hookAccounts);
+
+    $lookupTestUnknown = $TxHookParser->lookup('rAAAAAAAAAAAAAAAAAAAAAAAAAAAA','a','b');
+    $this->assertIsArray($lookupTestUnknown);
+    $this->assertEquals([], $lookupTestUnknown);
+
+    $lookupTestUnknown2 = $TxHookParser->lookup('rwyypATD1dQxDbdQjMvrqnsHr2cQw5rjMh','a','b');
+    $this->assertIsArray($lookupTestUnknown2);
+    $this->assertEquals([], $lookupTestUnknown2);
+
+    $lookupTestUnknown3 = $TxHookParser->lookup('rwyypATD1dQxDbdQjMvrqnsHr2cQw5rjMh','Hook','b');
+    $this->assertIsArray($lookupTestUnknown3);
+    $this->assertEquals([], $lookupTestUnknown3);
+
+    //This lookup should return list of hooks installed on specific account
+    $lookupTest = $TxHookParser->lookup('rwyypATD1dQxDbdQjMvrqnsHr2cQw5rjMh','Hook','installed');
+    $this->assertIsArray($lookupTest);
+    $this->assertEquals([
+      '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77'
+    ], $lookupTest);
   }
 
   public function testEnableAmendmentCreatedHooks()

@@ -314,6 +314,20 @@ class TxHookParser
   }
 
   /**
+   * Lookup map by address type and event respectivly
+   * from data added by addHook() method.
+   * @param ?string $address - null to lookup hooks without account context
+   * @param string $fromType
+   * @param string $event
+   * @return array
+   */
+  public function lookup(?string $address, string $fromType, string $event): array
+  {
+    $address = $address !== null ? $address:'NULL';
+    return isset($this->map_full[$address][$fromType][$event]) ? $this->map_full[$address][$fromType][$event]:[];
+  }
+
+  /**
    * Get list of hooks of affected provided account.
    * @return array
    */
