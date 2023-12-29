@@ -26,7 +26,7 @@ final class Tx09Test extends TestCase
       'B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648',
       'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
     ], $hooks);
-    
+
     # List of newly created hooks
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
@@ -50,7 +50,6 @@ final class Tx09Test extends TestCase
 
     # List of modified hooks
     $modifiedHooks = $TxHookParser->modifiedHooks();
-    //dd($modifiedHooks);
     $this->assertIsArray($modifiedHooks);
     $this->assertEquals([
       'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',

@@ -18,6 +18,7 @@ final class Tx01Test extends TestCase
 
     # List of all hooks
     $hooks = $TxHookParser->hooks();
+    
     $this->assertIsArray($hooks);
     $this->assertEquals([
       '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864',
@@ -26,13 +27,19 @@ final class Tx01Test extends TestCase
 
     # Installed hooks
     $installedHooks = $TxHookParser->installedHooks();
+
     $this->assertIsArray($hooks);
     $this->assertEquals([
       '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',
-      '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864'
+      '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',
+      '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',
+      '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864',
+      '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',
+      '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',
     ], $installedHooks);
 
     $installedHooksStats = $TxHookParser->installedHooksStats();
+ 
     $this->assertEquals([
       '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77' => 5,
       '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864' => 1
@@ -43,6 +50,7 @@ final class Tx01Test extends TestCase
 
     # List of newly created hooks
     $createdHooks = $TxHookParser->createdHooks();
+
     $this->assertIsArray($createdHooks);
     $this->assertEquals([
       '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864',
@@ -51,6 +59,7 @@ final class Tx01Test extends TestCase
     
     # List of all accounts
     $accounts = $TxHookParser->accounts();
+
     $this->assertIsArray($accounts);
     $this->assertEquals([
       'rwyypATD1dQxDbdQjMvrqnsHr2cQw5rjMh',
@@ -62,6 +71,7 @@ final class Tx01Test extends TestCase
 
     # Specific account
     $accountHooks = $TxHookParser->accountHooks('rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh');
+    //dd($accountHooks);
     $this->assertIsArray($accountHooks);
     $this->assertEquals([
       '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',

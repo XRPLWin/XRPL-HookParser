@@ -17,7 +17,6 @@ final class Tx03Test extends TestCase
     $TxHookParser = new TxHookParser($transaction->result);
 
     # List of all hooks
-    
     $hooks = $TxHookParser->hooks();
     $this->assertIsArray($hooks);
     $this->assertEquals([

@@ -42,7 +42,7 @@ $TxHookParser = new TxHookParser($tx);
 $hooks = $TxHookParser->hooks();
 # List of all accounts that are affected by hooks in transaction
 $accounts = $TxHookParser->accounts();
-# List of hooks by account
+# List of hooks by account*
 $accountHooks = $TxHookParser->accountHooks('raddress...');
 # List of accounts by hook
 $hookAccounts = $TxHookParser->hookAccounts('5EDF6...2DC77');
@@ -61,20 +61,25 @@ $destroyedHooks = $TxHookParser->destroyedHooks();
 # Check if specific hook is destroyed
 $isDestroyed = $TxHookParser->isHookDestroyed('5EDF6...2DC77');
 
-# List of uninstalled hooks (eg. SetHook transaction)
+# List of uninstalled hooks* (eg. SetHook transaction)
 $uninstalledHooks = $TxHookParser->uninstalledHooks();
 # List of uninstalled hooks with num uninstalls
 $uninstalledHooksStats = $TxHookParser->uninstalledHooksStats();
-# List of installed hooks (eg. SetHook transaction)
+# List of installed hooks* (eg. SetHook transaction)
 $installedHooks = $TxHookParser->installedHooks();
 # List of installed hooks with num installs
 $installedHooksStats = $TxHookParser->installedHooksStats();
-# List of modified hooks
+# List of modified hooks*
 $modifiedHooks = $TxHookParser->modifiedHooks();
 
 # Manual data lookup (lookup any combination of mapped data)
 $lookup = $TxHookParser->lookup('raddress...','Hook','installed');
 
+
+# * Methods that can return multiple same hook hashes, for example if
+#   account has same hook on two or more positions installed, it is 
+#   important to differentiate hook "instance" on account vs hook 
+#   create and destroy actions. List of hooks always returns unique hashes.
 ```
 
 ### HookOn field

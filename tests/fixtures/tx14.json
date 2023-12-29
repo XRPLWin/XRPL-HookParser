@@ -1,0 +1,139 @@
+{
+  "result": {
+    "Account": "rU52Rrh1K1X7Muvx4PnpjRq8nACrfHXAy6",
+    "Fee": "128548",
+    "Flags": 0,
+    "Hooks": [
+      {
+        "Hook": {
+          "CreateCode": "0061736D01000000011C0460057F7F7F7F7F017E60037F7F7E017E60027F7F017F60017F017E02230303656E76057472616365000003656E7606616363657074000103656E76025F670002030201030503010002062B077F0141B088040B7F004180080B7F0041A6080B7F004180080B7F0041B088040B7F0041000B7F0041010B07080104686F6F6B00030AC4800001C0800001017F230041106B220124002001200036020C41920841134180084112410010001A410022002000420010011A41012200200010021A200141106A240042000B0B2C01004180080B254163636570742E633A2043616C6C65642E00224163636570742E633A2043616C6C65642E22",
+          "Flags": 1,
+          "HookApiVersion": 0,
+          "HookGrants": [
+            {
+              "HookGrant": {
+                "HookHash": "78CAF69EEE950A6C55A450AC2A980DE434D624CD1B13148E007E28B7B6461CC8"
+              }
+            }
+          ],
+          "HookNamespace": "3963ADEB1B0E8934C0963680531202FD511FF1E16D5864402C2DA63861C420A8",
+          "HookOn": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFE",
+          "HookParameters": [
+            {
+              "HookParameter": {
+                "HookParameterName": "ABCDEF12",
+                "HookParameterValue": "12345678"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "LastLedgerSequence": 9468982,
+    "Memos": [
+      {
+        "Memo": {
+          "MemoData": "54657374206D656D6F",
+          "MemoType": "4465736372697074696F6E"
+        }
+      }
+    ],
+    "NetworkID": 21338,
+    "Sequence": 8111203,
+    "SigningPubKey": "ED8F72161BFEC9C5816B4DEC6E787B98760FBD5703C42AEDD44D3A1020F33561DD",
+    "TransactionType": "SetHook",
+    "TxnSignature": "A0070A62C9A01517506D617B11833516208D4BF91592338079D55061DC23742146138FA6C877F9E40B3DE81A781140CD617731AC8B64A0FEC696532A18183F04",
+    "ctid": "C0907C240000535A",
+    "date": 756812002,
+    "hash": "3C64927DF28615DC64554FC21DA137F2707C0C367386E15797583ECEF04996F5",
+    "inLedger": 9468964,
+    "ledger_index": 9468964,
+    "meta": {
+      "AffectedNodes": [
+        {
+          "ModifiedNode": {
+            "FinalFields": {
+              "Account": "rU52Rrh1K1X7Muvx4PnpjRq8nACrfHXAy6",
+              "Flags": 0,
+              "Hooks": [
+                {
+                  "Hook": {
+                    "Flags": 0,
+                    "HookGrants": [
+                      {
+                        "HookGrant": {
+                          "HookHash": "78CAF69EEE950A6C55A450AC2A980DE434D624CD1B13148E007E28B7B6461CC8"
+                        }
+                      }
+                    ],
+                    "HookHash": "ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7",
+                    "HookNamespace": "3963ADEB1B0E8934C0963680531202FD511FF1E16D5864402C2DA63861C420A8",
+                    "HookOn": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFE",
+                    "HookParameters": [
+                      {
+                        "HookParameter": {
+                          "HookParameterName": "ABCDEF12",
+                          "HookParameterValue": "12345678"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "Hook": {
+                    "Flags": 0,
+                    "HookGrants": [
+                      {
+                        "HookGrant": {
+                          "HookHash": "78CAF69EEE950A6C55A450AC2A980DE434D624CD1B13148E007E28B7B6461CC8"
+                        }
+                      }
+                    ],
+                    "HookHash": "ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7",
+                    "HookNamespace": "3963ADEB1B0E8934C0963680531202FD511FF1E16D5864402C2DA63861C420A8",
+                    "HookOn": "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFE",
+                    "HookParameters": [
+                      {
+                        "HookParameter": {
+                          "HookParameterName": "ABCDEF12",
+                          "HookParameterValue": "12345678"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "OwnerNode": "0"
+            },
+            "LedgerEntryType": "Hook",
+            "LedgerIndex": "441FF305E743C9837317570B2D1D1F6B20793B273C099AD4D824DADA3D3863D1"
+          }
+        },
+        {
+          "ModifiedNode": {
+            "FinalFields": {
+              "Account": "rU52Rrh1K1X7Muvx4PnpjRq8nACrfHXAy6",
+              "AccountIndex": "16b8",
+              "Balance": "9934997770",
+              "EmailHash": "1D1382344586ECFF844DACFF698C2EFB",
+              "Flags": 0,
+              "MintedNFTokens": 6,
+              "OwnerCount": 7,
+              "Sequence": 8111204
+            },
+            "LedgerEntryType": "AccountRoot",
+            "LedgerIndex": "5093B928E9075DCEFF711C84CB6C46A5A3753025B73510A79F631FE6834A03DE",
+            "PreviousFields": {
+              "Balance": "9935126318",
+              "Sequence": 8111203
+            }
+          }
+        }
+      ],
+      "TransactionIndex": 0,
+      "TransactionResult": "tesSUCCESS"
+    },
+    "status": "success",
+    "validated": true
+  }
+}

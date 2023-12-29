@@ -46,7 +46,6 @@ class TxHookParser
         ($this->tx->TransactionType == 'EmitFailure' ? 'emitfail':'emitsuccess'),
       );
     }
-    //dd($this->tx->EmitDetails);
   }
 
   private function extractHooksFromMeta(): void
@@ -94,8 +93,9 @@ class TxHookParser
                 );
                 if(count($parsed['added'])) {
                   foreach($parsed['added'] as $h => $hv) {
+                    $h = \explode('_',$h);
                     $this->addHook(
-                      $h,
+                      $h[0],
                       $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
                       'Hook',
                       'installed'
@@ -105,8 +105,9 @@ class TxHookParser
 
                 if(count($parsed['removed'])) {
                   foreach($parsed['removed'] as $h => $hv) {
+                    $h = \explode('_',$h);
                     $this->addHook(
-                      $h,
+                      $h[0],
                       $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
                       'Hook',
                       'uninstalled'
@@ -116,26 +117,27 @@ class TxHookParser
 
                 if(count($parsed['modified'])) {
                   foreach($parsed['modified'] as $h => $hv) {
+                    $h = \explode('_',$h);
                     $this->addHook(
-                      $h,
+                      $h[0],
                       $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
                       'Hook',
                       'modified'
                     );
                   }
                 }
-                
-                //dd($parsed);
-                /*foreach($AffectedNode->ModifiedNode->FinalFields->Hooks as $hook) {
-                  if(isset($hook->Hook->HookHash)) {
+                //dd($parsed['unmodified']);
+                if(count($parsed['unmodified'])) {
+                  foreach($parsed['unmodified'] as $h => $hv) {
+                    $h = \explode('_',$h);
                     $this->addHook(
-                      $hook->Hook->HookHash,
+                      $h[0],
                       $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
                       'Hook',
-                      'updated'
+                      'unmodified'
                     );
                   }
-                }*/
+                }
                 break;
             }
           }
@@ -198,31 +200,59 @@ class TxHookParser
     //flag to indicate modification of hook (prev does not exist in modified node)
     //ledger does not include previous fields when there is no changes
     $is_modify = !$prevFieldsSet;
-
+    
     $prev = $prev === null?[]:$prev;
     $final = $final === null?[]:$final;
-
+    
     $r = ['added' => [], 'removed' => [], 'unmodified' => [], 'modified' => []];
     $tracker = [];
+    $postracker = ['prev' => [],'final' => []];
+
+    # POSTRACKER, eg hook index per hook, each first hook has index of 0
+    # if there is two same hook hashes they will have indexes 0 and 1
+    # Differentiate same hooks in different positions
+    foreach($prev as $p) {
+      if(!isset($p->Hook->HookHash)) continue;
+      if(!isset($postracker['prev'][$p->Hook->HookHash]))
+        $postracker['prev'][$p->Hook->HookHash] = -1;
+      $postracker['prev'][$p->Hook->HookHash]++;
+    }
+
+    foreach($final as $p) {
+      if(!isset($p->Hook->HookHash)) continue;
+      if(!isset($postracker['final'][$p->Hook->HookHash]))
+        $postracker['final'][$p->Hook->HookHash] = -1;
+      $postracker['final'][$p->Hook->HookHash]++;
+    }
+    # POSTRACKER END
 
     foreach($prev as $p) {
       if(!isset($p->Hook->HookHash)) continue;
       $h = $p->Hook->HookHash;
+      //Index:
+      $hi = $postracker['prev'][$h];
+      $postracker['prev'][$h]--; //one index exausted
+      //Index end
       $contents = $this->normalizeHookNode($p->Hook);
-      $tracker[$h] = ['state' => 1, 'hsh' => [\json_encode($contents)]];
+      $tracker[$h.'_'.$hi] = ['state' => 1, 'hsh' => [\json_encode($contents)]];
     }
     
     foreach($final as $p) {
       if(!isset($p->Hook->HookHash)) continue;
       $h = $p->Hook->HookHash;
+      //Index:
+      $hi = $postracker['final'][$h];
+      $postracker['final'][$h]--; //one index exausted
+      //Index end
       $contents = $this->normalizeHookNode($p->Hook);
-      if(!isset($tracker[$h])) {
-        $tracker[$h] = ['state' => 0, 'hsh' => [\json_encode($contents)]];
+      if(!isset($tracker[$h.'_'.$hi])) {
+        $tracker[$h.'_'.$hi] = ['state' => 0, 'hsh' => [\json_encode($contents)]];
       } else {
-        $tracker[$h]['hsh'][] = \json_encode($contents);
-        $tracker[$h]['state']++;
+        $tracker[$h.'_'.$hi]['hsh'][] = \json_encode($contents);
+        $tracker[$h.'_'.$hi]['state']++;
       }
     }
+
     foreach($tracker as $h => $data) {
       $state = $data['state'];
       if($state === 0) {
@@ -335,7 +365,7 @@ class TxHookParser
   {
     if(!isset($this->map_account_hash[$address]))
       return [];
-    return \array_values(\array_unique($this->map_account_hash[$address]));
+    return \array_values($this->map_account_hash[$address]);
   }
 
   /**
@@ -403,7 +433,7 @@ class TxHookParser
   {
     if(!isset($this->map_typeevent_hashes['Hook_installed']))
       return [];
-    return \array_values(\array_unique($this->map_typeevent_hashes['Hook_installed']));
+    return \array_values($this->map_typeevent_hashes['Hook_installed']);
   }
 
 
@@ -431,7 +461,7 @@ class TxHookParser
   {
     if(!isset($this->map_typeevent_hashes['Hook_uninstalled']))
       return [];
-    return \array_values(\array_unique($this->map_typeevent_hashes['Hook_uninstalled']));
+    return \array_values($this->map_typeevent_hashes['Hook_uninstalled']);
   }
 
   /**
@@ -455,7 +485,7 @@ class TxHookParser
   {
     if(!isset($this->map_typeevent_hashes['Hook_modified']))
       return [];
-    return \array_values(\array_unique($this->map_typeevent_hashes['Hook_modified']));
+    return \array_values($this->map_typeevent_hashes['Hook_modified']);
   }
 
   # Static
