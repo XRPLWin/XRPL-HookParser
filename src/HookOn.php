@@ -13,9 +13,10 @@ use Brick\Math\BigInteger;
 class HookOn
 {
   /**
-   * Default value if null, all triggers are ignored.
+   * All triggers are ignored.
+   * Used as basis for adding (triggering) triggers when encoding triggers to string.
    */
-  const DEFAULT = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff';
+  const DEFAULT_IGNORED = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffbfffff';
 
   /**
    * TT codes (https://github.com/Xahau/xahaud/blob/dev/hook/tts.h)
@@ -29,6 +30,7 @@ class HookOn
   const ttNICKNAME_SET = 6; //deprecated
   const ttOFFER_CREATE = 7;
   const ttOFFER_CANCEL = 8;
+  const ttCONTRACT = 9; //deprecated
   const ttTICKET_CREATE = 10;
   const ttSPINAL_TAP = 11; //deprecated
   const ttSIGNER_LIST_SET = 12;
@@ -73,6 +75,7 @@ class HookOn
     6 => 'ttNICKNAME_SET', //deprecated
     7 => 'ttOFFER_CREATE',
     8 => 'ttOFFER_CANCEL',
+    9 => 'ttCONTRACT', //deprecated
     10 => 'ttTICKET_CREATE',
     11 => 'ttSPINAL_TAP', //deprecated
     12 => 'ttSIGNER_LIST_SET',
@@ -155,7 +158,7 @@ class HookOn
    */
   public static function encode(array $triggers = []): string
   {
-    $hookon = self::normalize(self::DEFAULT);
+    $hookon = self::normalize(self::DEFAULT_IGNORED);
     foreach($triggers as $trigger) {
       $hookon = self::trigger($hookon,$trigger);
     }

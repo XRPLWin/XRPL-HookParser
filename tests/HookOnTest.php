@@ -72,7 +72,7 @@ final class HookOnTest extends TestCase
     $hookon = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
     $triggered = HookOn::decode($hookon);
     $this->assertEquals([22 => 'ttHOOK_SET'],$triggered);
-
+   
     $hookon = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
     $triggered = HookOn::decode($hookon);
     $this->assertEquals([22 => 'ttHOOK_SET'],$triggered);
@@ -80,7 +80,7 @@ final class HookOnTest extends TestCase
     $hookon = 'FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
     $triggered = HookOn::decode($hookon);
     $this->assertEquals([22 => 'ttHOOK_SET'],$triggered);
-
+    
     $hookon = '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
     $triggered = HookOn::decode($hookon);
     $this->assertEquals([22 => 'ttHOOK_SET'],$triggered);
@@ -88,11 +88,32 @@ final class HookOnTest extends TestCase
     $hookon = '0XFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
     $triggered = HookOn::decode($hookon);
     $this->assertEquals([22 => 'ttHOOK_SET'],$triggered);
-
+    
     $hookon = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffff9ffff7';
     $triggered = HookOn::decode($hookon);
-    $this->assertEquals([21 => 'ttACCOUNT_DELETE', 3 => 'ttACCOUNT_SET'],$triggered);
+    
+    $this->assertEquals([3 => 'ttACCOUNT_SET', 21 => 'ttACCOUNT_DELETE'],$triggered);
+    
+    //All 256 0-255 minus one (ttHOOK_SET) = 255
+    $hookon = '0x0000000000000000000000000000000000000000000000000000000000000000';
+    $triggered = HookOn::decode($hookon,false);
+    $this->assertEquals(255,count($triggered));
 
+    //All 256 0-255 minus one (ttHOOK_SET) = 255
+    $hookon = '0000000000000000000000000000000000000000000000000000000000000000';
+    $triggered = HookOn::decode($hookon,false);
+    $this->assertEquals(255,count($triggered));
+
+    //All 256 0-255 minus one (ttHOOK_SET) = 255
+    $hookon = '0X0000000000000000000000000000000000000000000000000000000000000000';
+    $triggered = HookOn::decode($hookon,false);
+    $this->assertEquals(255,count($triggered));
+
+    //All 256 0-255 minus two (ttHOOK_SET,ttESCROW_FINISH) = 254
+    $hookon = '0x0000000000000000000000000000000000000000000000000000000000000004';
+    $triggered = HookOn::decode($hookon,false);
+    $this->assertEquals(254,count($triggered));
+    
     //ALL (public) triggers
     $hookon = '0xfffffffffffffffffffffffffffffffffffffff7fffffffffffc1fffffc00a40';
     $triggered = HookOn::decode($hookon);
@@ -113,6 +134,8 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttUNL_REPORT]);
     unset($expected[HookOn::ttNICKNAME_SET]);
     unset($expected[HookOn::ttSPINAL_TAP]);
+    //Remove "public" contract (added later)
+    unset($expected[HookOn::ttCONTRACT]);
     $this->assertEquals($expected,$triggered);
 
     //ALL triggers except TRUST_SET
@@ -135,8 +158,10 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttUNL_REPORT]);
     unset($expected[HookOn::ttNICKNAME_SET]);
     unset($expected[HookOn::ttSPINAL_TAP]);
-    //Remove "public" trust set
+
+    //Remove "public" trust set and contract
     unset($expected[HookOn::ttTRUST_SET]);
+    unset($expected[HookOn::ttCONTRACT]);
     $this->assertEquals($expected,$triggered);
   }
 
@@ -151,9 +176,9 @@ final class HookOnTest extends TestCase
   {
     $hookon = '0x000000000000000000000000000000000000000000000000000000003e3ff5be';
     $decoded = HookOn::decode($hookon,false);
-   
+
     $this->assertEquals('ttPAYMENT', $decoded[0]);
-    $this->assertEquals(null, $decoded[9]);
+    $this->assertEquals('ttCONTRACT', $decoded[9]);
     $this->assertEquals(null, $decoded[255]);
   }
 
