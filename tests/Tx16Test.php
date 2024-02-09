@@ -16,7 +16,7 @@ final class Tx16Test extends TestCase
     $transaction = file_get_contents(__DIR__.'/fixtures/tx16.json');
     $transaction = \json_decode($transaction);
     $TxHookParser = new TxHookParser($transaction->result);
-
+    //dd($TxHookParser);
     # List of all hooks
     $hooks = $TxHookParser->hooks();
     $this->assertIsArray($hooks);
@@ -30,12 +30,12 @@ final class Tx16Test extends TestCase
     $this->assertEquals([
       'rMUyMTJMNWfMY6ZAar929gGSCBZi6A45mb',
     ], $accounts);
-  
+    
     # List of newly created hooks
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
     $this->assertEquals([], $createdHooks);
-
+    
     # List of newly created hooks (detailed)
     $createdHooksDetailed = $TxHookParser->createdHooksDetailed();
     $this->assertIsArray($createdHooksDetailed);
@@ -68,9 +68,7 @@ final class Tx16Test extends TestCase
     # Both metadata are the same, this is internally unmodified hook
     $modifiedHooks = $TxHookParser->modifiedHooks();
     $this->assertIsArray($modifiedHooks);
-    $this->assertEquals([
-      '4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91' //not exactley modified, skipped
-    ], $modifiedHooks);
+    $this->assertEquals([], $modifiedHooks);
     
     # List of hooks by account
     # In this case this account have two hooks with of same hash, one added one unmodified
@@ -81,9 +79,9 @@ final class Tx16Test extends TestCase
       '4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',
       '4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',
     ], $accountHooks);
-    
     # List of accounts by hook
     $hookAccounts = $TxHookParser->hookAccounts('4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91');
+    
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([
       'rMUyMTJMNWfMY6ZAar929gGSCBZi6A45mb',
@@ -93,12 +91,12 @@ final class Tx16Test extends TestCase
     
     # List of hooks with positions:
 
-    //INSTALLED
-    $installedHooks = $TxHookParser->installedHooksPos();
-    $this->assertIsArray($installedHooks);
+    //INSTALLED POSITIONS
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
     $this->assertEquals([
-      [3,'4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91'],
-    ], $installedHooks);
+      ['4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',3],
+    ], $installedHooksPos);
 
   }
 }

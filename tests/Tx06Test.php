@@ -23,24 +23,24 @@ final class Tx06Test extends TestCase
     $this->assertEquals([
       'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',
     ], $hooks);
-    
+
     # List of newly created hooks (none here)
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
     $this->assertEquals([], $createdHooks);
-
+    
     # List of uninstalled hooks
     $uninstalledHooks = $TxHookParser->uninstalledHooks();
     $this->assertIsArray($uninstalledHooks);
     $this->assertEquals([
       'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7'
     ], $uninstalledHooks);
-
+    
     $uninstalledHooksStats = $TxHookParser->uninstalledHooksStats();
     $this->assertEquals([
       'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7' => 1
     ], $uninstalledHooksStats);
-
+    
     # List of installed hooks
     $createdHooks = $TxHookParser->installedHooks();
     $this->assertIsArray($createdHooks);

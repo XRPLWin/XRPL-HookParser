@@ -26,9 +26,10 @@ final class Tx09Test extends TestCase
       'B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648',
       'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
     ], $hooks);
-
+   
     # List of newly created hooks
     $createdHooks = $TxHookParser->createdHooks();
+    //dd($TxHookParser,$createdHooks);
     $this->assertIsArray($createdHooks);
     $this->assertEquals([
       'B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648'
@@ -36,6 +37,7 @@ final class Tx09Test extends TestCase
     
     # List of destroyed hook definitions
     $destroyedHooks = $TxHookParser->destroyedHooks();
+   
     $this->assertIsArray($destroyedHooks);
     $this->assertEquals([
       '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A'
@@ -43,6 +45,7 @@ final class Tx09Test extends TestCase
     
     # List of uninstalled hooks
     $uninstalledHooks = $TxHookParser->uninstalledHooks();
+    
     $this->assertIsArray($uninstalledHooks);
     $this->assertEquals([
       '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A'
