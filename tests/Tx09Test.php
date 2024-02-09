@@ -26,9 +26,11 @@ final class Tx09Test extends TestCase
       'B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648',
       'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
     ], $hooks);
-
+   
     # List of newly created hooks
     $createdHooks = $TxHookParser->createdHooks();
+    
+    //dd($TxHookParser,$createdHooks);
     $this->assertIsArray($createdHooks);
     $this->assertEquals([
       'B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648'
@@ -36,6 +38,7 @@ final class Tx09Test extends TestCase
     
     # List of destroyed hook definitions
     $destroyedHooks = $TxHookParser->destroyedHooks();
+    
     $this->assertIsArray($destroyedHooks);
     $this->assertEquals([
       '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A'
@@ -43,6 +46,7 @@ final class Tx09Test extends TestCase
     
     # List of uninstalled hooks
     $uninstalledHooks = $TxHookParser->uninstalledHooks();
+    
     $this->assertIsArray($uninstalledHooks);
     $this->assertEquals([
       '09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A'
@@ -51,9 +55,14 @@ final class Tx09Test extends TestCase
     # List of modified hooks
     $modifiedHooks = $TxHookParser->modifiedHooks();
     $this->assertIsArray($modifiedHooks);
+    $this->assertEquals([], $modifiedHooks);
+
+    # List of unmodified hooks
+    $unmodifiedHooks = $TxHookParser->unmodifiedHooks();
+    $this->assertIsArray($unmodifiedHooks);
     $this->assertEquals([
       'DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',
-    ], $modifiedHooks);
+    ], $unmodifiedHooks);
     
     # List of all accounts
     $accounts = $TxHookParser->accounts();
@@ -94,5 +103,34 @@ final class Tx09Test extends TestCase
     $hookAccounts = $TxHookParser->hookAccounts('5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77');
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([], $hookAccounts);
+  }
+
+  public function testSetHookPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx09.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
+    
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([
+      ['09052AC45C29C226FD15731B0F96F03FF0B714961FC49A62B10897474D6EA03A',1]
+    ], $uninstalledHooksPos);
+
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
+    $this->assertEquals([
+      ['B2B2892A2E738D8C074C5C5B40253BDAB5E4AD3D45113144EAC5E933457AF648',1]
+    ], $installedHooksPos);
+
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
+    
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([
+      ['DCA4B765D3E1372B10CC641940E4C053C23862C32E9D838D4EE98853A05C9202',0]
+    ], $unmodifiedHooksPos);
   }
 }

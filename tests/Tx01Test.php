@@ -27,7 +27,7 @@ final class Tx01Test extends TestCase
 
     # Installed hooks
     $installedHooks = $TxHookParser->installedHooks();
-
+   
     $this->assertIsArray($hooks);
     $this->assertEquals([
       '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',
@@ -39,7 +39,7 @@ final class Tx01Test extends TestCase
     ], $installedHooks);
 
     $installedHooksStats = $TxHookParser->installedHooksStats();
- 
+    
     $this->assertEquals([
       '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77' => 5,
       '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864' => 1
@@ -50,7 +50,7 @@ final class Tx01Test extends TestCase
 
     # List of newly created hooks
     $createdHooks = $TxHookParser->createdHooks();
-
+    
     $this->assertIsArray($createdHooks);
     $this->assertEquals([
       '610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864',
@@ -59,7 +59,7 @@ final class Tx01Test extends TestCase
     
     # List of all accounts
     $accounts = $TxHookParser->accounts();
-
+    
     $this->assertIsArray($accounts);
     $this->assertEquals([
       'rwyypATD1dQxDbdQjMvrqnsHr2cQw5rjMh',
@@ -71,7 +71,7 @@ final class Tx01Test extends TestCase
 
     # Specific account
     $accountHooks = $TxHookParser->accountHooks('rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh');
-    //dd($accountHooks);
+
     $this->assertIsArray($accountHooks);
     $this->assertEquals([
       '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',
@@ -80,6 +80,7 @@ final class Tx01Test extends TestCase
 
     # Specific hook
     $hookAccounts = $TxHookParser->hookAccounts('5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77');
+
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([
       'rwyypATD1dQxDbdQjMvrqnsHr2cQw5rjMh',
@@ -101,11 +102,11 @@ final class Tx01Test extends TestCase
     $this->assertIsArray($lookupTestUnknown3);
     $this->assertEquals([], $lookupTestUnknown3);
 
-    //This lookup should return list of hooks installed on specific account
+    //This lookup should return list of hooks installed on specific account with position
     $lookupTest = $TxHookParser->lookup('rwyypATD1dQxDbdQjMvrqnsHr2cQw5rjMh','Hook','installed');
     $this->assertIsArray($lookupTest);
     $this->assertEquals([
-      '5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77'
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0]
     ], $lookupTest);
   }
 
@@ -123,5 +124,35 @@ final class Tx01Test extends TestCase
     $params = TxHookParser::toParams($createdHooksDetailed['610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864']);
     $this->assertIsArray($params);
     $this->assertEmpty($params); //no initial params defined in hook install
+  }
+
+  public function testEnableAmendmentPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx01.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
+    
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([], $uninstalledHooksPos);
+
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
+    $this->assertEquals([
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+      ['610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864',1], //reward
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+    ], $installedHooksPos);
+
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
+    
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([], $unmodifiedHooksPos);
   }
 }

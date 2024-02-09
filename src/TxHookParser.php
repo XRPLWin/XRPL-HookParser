@@ -44,6 +44,7 @@ class TxHookParser
         $this->tx->Account,
         'EmitDetails',
         ($this->tx->TransactionType == 'EmitFailure' ? 'emitfail':'emitsuccess'),
+        null
       );
     }
   }
@@ -55,23 +56,26 @@ class TxHookParser
         if(isset($AffectedNode->CreatedNode)) { //Created
           if(isset($AffectedNode->CreatedNode->LedgerEntryType)) {
             switch($AffectedNode->CreatedNode->LedgerEntryType) {
+             
               case 'HookDefinition':
                 $this->addHook(
                   $AffectedNode->CreatedNode->NewFields->HookHash,
                   null,
                   'HookDefinition',
-                  'created'
+                  'created',
+                  null
                 );
                 $this->addCreatedHookDetails($AffectedNode->CreatedNode->NewFields->HookHash,$AffectedNode->CreatedNode);
                 break;
               case 'Hook':
-                foreach($AffectedNode->CreatedNode->NewFields->Hooks as $hook) {
+                foreach($AffectedNode->CreatedNode->NewFields->Hooks as $position => $hook) {
                   if(isset($hook->Hook->HookHash)) {
                     $this->addHook(
                       $hook->Hook->HookHash,
                       $AffectedNode->CreatedNode->NewFields->Account, //affected account
                       'Hook',
-                      'installed'
+                      'installed',
+                      $position
                     );
                   }
                 }
@@ -95,10 +99,11 @@ class TxHookParser
                   foreach($parsed['added'] as $h => $hv) {
                     $h = \explode('_',$h);
                     $this->addHook(
-                      $h[0],
+                      $h[1],
                       $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
                       'Hook',
-                      'installed'
+                      'installed',
+                      (int)$h[0]
                     );
                   }
                 }
@@ -107,10 +112,11 @@ class TxHookParser
                   foreach($parsed['removed'] as $h => $hv) {
                     $h = \explode('_',$h);
                     $this->addHook(
-                      $h[0],
+                      $h[1],
                       $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
                       'Hook',
-                      'uninstalled'
+                      'uninstalled',
+                      (int)$h[0]
                     );
                   }
                 }
@@ -119,10 +125,11 @@ class TxHookParser
                   foreach($parsed['modified'] as $h => $hv) {
                     $h = \explode('_',$h);
                     $this->addHook(
-                      $h[0],
+                      $h[1],
                       $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
                       'Hook',
-                      'modified'
+                      'modified',
+                      (int)$h[0]
                     );
                   }
                 }
@@ -131,10 +138,11 @@ class TxHookParser
                   foreach($parsed['unmodified'] as $h => $hv) {
                     $h = \explode('_',$h);
                     $this->addHook(
-                      $h[0],
+                      $h[1],
                       $AffectedNode->ModifiedNode->FinalFields->Account, //affected account
                       'Hook',
-                      'unmodified'
+                      'unmodified',
+                      (int)$h[0]
                     );
                   }
                 }
@@ -151,19 +159,20 @@ class TxHookParser
                   $AffectedNode->DeletedNode->FinalFields->HookHash,
                   null,
                   'HookDefinition',
-                  'destroyed'
+                  'destroyed',
+                  null
                 );
                 
                 break;
               case 'Hook':
-                foreach($AffectedNode->DeletedNode->FinalFields->Hooks as $hook) {
+                foreach($AffectedNode->DeletedNode->FinalFields->Hooks as $position => $hook) {
                   if(isset($hook->Hook->HookHash)) {
-                    
                     $this->addHook(
                       $hook->Hook->HookHash,
                       $AffectedNode->DeletedNode->FinalFields->Account, //affected account
                       'Hook',
-                      'uninstalled'
+                      'uninstalled',
+                      $position
                     );
                   }
                 }
@@ -180,19 +189,86 @@ class TxHookParser
           $HookExecution->HookExecution->HookHash,
           $HookExecution->HookExecution->HookAccount, //affected account
           'HookExecution',
-          'target'
+          'target',
+          null
         );
       }
     }
-    //dd($this->meta,$this->map_full,$this->map_hash_accounts,$this->map_account_hash,$this->map_hashes);
   }
 
   private function normalizeHookNode(\stdClass $node): array
   {
     $n = (array)$node;
-    //if(!isset($n['Flags'])) $n['Flags'] = 0;
+    //Normalize Flag, omitted is same as 0
+    if(!isset($n['Flags'])) $n['Flags'] = 0;
     \ksort($n);
     return $n;
+  }
+
+  /**
+   * Takes position in Hooks array and extracts change for single position.
+   * @return array [type,old,new] or []
+   */
+  private function hookChangesFromModifiedHookNodePosition(?\stdClass $prev,?\stdClass $final, bool $is_modify): array
+  {
+    //normalize empty slot
+    if(isset($prev->Hook) && !isset($prev->Hook->HookHash))
+      $prev = null;
+    if(isset($final->Hook) && !isset($final->Hook->HookHash))
+      $final = null;
+
+    if($prev === null && $final === null) {
+      //no change
+      return [
+        'type' => 'unmodified_null',
+        'focus' => null,
+        'old' => null,
+        'new' => null
+      ];
+    } else if($prev === null && isset($final->Hook)) {
+      //install
+      if($is_modify) {
+        return [
+          'type' => 'unmodified',
+          'old' => $final->Hook->HookHash,
+          'new' => $final->Hook->HookHash
+        ];
+      }
+      return [
+        'type' => 'added',
+        'focus' => $final->Hook->HookHash,
+        'old' => null,
+        'new' => $final->Hook->HookHash
+      ];
+    } else if(isset($prev->Hook) && $final === null) {
+      //uninstall
+      return [
+        'type' => 'removed',
+        'focus' => $prev->Hook->HookHash,
+        'old' => $prev->Hook->HookHash,
+        'new' => null
+      ];
+
+    } else if(isset($prev->Hook) && isset($final->Hook)) {
+      //modify
+      $prevContents = $this->normalizeHookNode($prev->Hook);
+      $prevHash = \json_encode($prevContents);
+      $finalContents = $this->normalizeHookNode($final->Hook);
+      $finalHash = \json_encode($finalContents);
+      if($prevHash != $finalHash) {
+        return [
+          'type' => 'modified',
+          'old' => $prev->Hook->HookHash,
+          'new' => $final->Hook->HookHash
+        ];
+      } else {
+        return [
+          'type' => 'unmodified',
+          'old' => $prev->Hook->HookHash,
+          'new' => $final->Hook->HookHash
+        ];
+      }
+    }
   }
 
   private function hookChangesFromModifiedHookNode(?array $prev, ?array $final, bool $prevFieldsSet): array
@@ -203,79 +279,44 @@ class TxHookParser
     
     $prev = $prev === null?[]:$prev;
     $final = $final === null?[]:$final;
-    
+
     $r = ['added' => [], 'removed' => [], 'unmodified' => [], 'modified' => []];
-    $tracker = [];
-    $postracker = ['prev' => [],'final' => []];
 
-    # POSTRACKER, eg hook index per hook, each first hook has index of 0
-    # if there is two same hook hashes they will have indexes 0 and 1
-    # Differentiate same hooks in different positions
-    foreach($prev as $p) {
-      if(!isset($p->Hook->HookHash)) continue;
-      if(!isset($postracker['prev'][$p->Hook->HookHash]))
-        $postracker['prev'][$p->Hook->HookHash] = -1;
-      $postracker['prev'][$p->Hook->HookHash]++;
+    $results = [];
+    $pos = 0;
+    while ($pos < 10) {
+      $results[$pos] = $this->hookChangesFromModifiedHookNodePosition(
+        isset($prev[$pos]) ? $prev[$pos]:null,
+        isset($final[$pos]) ? $final[$pos]:null,
+        $is_modify
+      );
+      $pos++;
     }
-
-    foreach($final as $p) {
-      if(!isset($p->Hook->HookHash)) continue;
-      if(!isset($postracker['final'][$p->Hook->HookHash]))
-        $postracker['final'][$p->Hook->HookHash] = -1;
-      $postracker['final'][$p->Hook->HookHash]++;
-    }
-    # POSTRACKER END
-
-    foreach($prev as $p) {
-      if(!isset($p->Hook->HookHash)) continue;
-      $h = $p->Hook->HookHash;
-      //Index:
-      $hi = $postracker['prev'][$h];
-      $postracker['prev'][$h]--; //one index exausted
-      //Index end
-      $contents = $this->normalizeHookNode($p->Hook);
-      $tracker[$h.'_'.$hi] = ['state' => 1, 'hsh' => [\json_encode($contents)]];
-    }
-    
-    foreach($final as $p) {
-      if(!isset($p->Hook->HookHash)) continue;
-      $h = $p->Hook->HookHash;
-      //Index:
-      $hi = $postracker['final'][$h];
-      $postracker['final'][$h]--; //one index exausted
-      //Index end
-      $contents = $this->normalizeHookNode($p->Hook);
-      if(!isset($tracker[$h.'_'.$hi])) {
-        $tracker[$h.'_'.$hi] = ['state' => 0, 'hsh' => [\json_encode($contents)]];
-      } else {
-        $tracker[$h.'_'.$hi]['hsh'][] = \json_encode($contents);
-        $tracker[$h.'_'.$hi]['state']++;
-      }
-    }
-
-    foreach($tracker as $h => $data) {
-      $state = $data['state'];
-      if($state === 0) {
-        //hook added
-        if($is_modify)
-          $r['modified'][$h] = true;
-        else
-          $r['added'][$h] = true;
-      } else if($state === 1) {
-        //hook removed
-        $r['removed'][$h] = true;
-      } else if($state === 2) {
-        //hook kept
-        if(count($data['hsh']) > 1 && $data['hsh'][0] != $data['hsh'][1]) {
-          $r['modified'][$h] = true;
+    foreach($results as $pos => $result) {
+      if($result['type'] == 'unmodified_null') {
+        //skip empty position
+      } else if($result['type'] == 'added') {
+        $r['added'][$pos.'_'.$result['new']] = $pos;
+      } else if($result['type'] == 'removed') {
+        $r['removed'][$pos.'_'.$result['old']] = $pos;
+      } else if($result['type'] == 'modified') {
+        if($result['old'] != $result['new']) {
+          //different hashes, one removed other added
+          $r['removed'][$pos.'_'.$result['old']] = $pos;
+          $r['added'][$pos.'_'.$result['new']] = $pos;
         } else {
-          $r['unmodified'][$h] = true;
+          //same hashes new/old one is modified
+          $r['modified'][$pos.'_'.$result['new']] = $pos;
         }
+      } else if($result['type'] == 'unmodified') {
+        $r['unmodified'][$pos.'_'.$result['new']] = $pos;
+      } else {
+        throw new \Exception('Unhandled '.$result['type']);
       }
     }
     return $r;
   }
-
+  
   private function extractHooksFromContext(): void
   {
     # Invoked hook (https://docs.xahau.network/features/transaction-types/invoke)
@@ -283,12 +324,13 @@ class TxHookParser
     if($this->tx->TransactionType == 'Invoke') {
       foreach($this->map_typeevent_hashes as $k => $v) {
         if($k == 'HookExecution_target') {
-          foreach($v as $h) {
+          foreach($v as $hData) {
             $this->addHook(
-              $h,
+              $hData[0],
               $this->tx->Account, //affected account
               'HookExecution',
-              'invoker'
+              'invoker',
+              null
             );
           }
         }
@@ -296,13 +338,13 @@ class TxHookParser
     }
   }
 
-  private function addHook(string $hookHash, ?string $account, string $fromType, string $event): void
+  private function addHook(string $hookHash, ?string $account, string $fromType, string $event, ?int $position): void
   {
     $account = $account !== null ? $account:'NULL';
-    $this->map_full[$account][$fromType][$event][] = $hookHash;
+    $this->map_full[$account][$fromType][$event][] = [$hookHash,$position];
 
     $this->map_hashes[$hookHash] = true;
-    $this->map_typeevent_hashes[$fromType.'_'.$event][] = $hookHash;
+    $this->map_typeevent_hashes[$fromType.'_'.$event][] = [$hookHash,$position];
 
     if(!isset($this->map_hash_accounts[$hookHash]))
       $this->map_hash_accounts[$hookHash] = [];
@@ -312,7 +354,7 @@ class TxHookParser
 
       if(!isset($this->map_account_hash[$account]))
         $this->map_account_hash[$account] = [];
-      $this->map_account_hash[$account][] = $hookHash;
+      $this->map_account_hash[$account][] = [$hookHash,$position];
     }
   }
 
@@ -365,7 +407,14 @@ class TxHookParser
   {
     if(!isset($this->map_account_hash[$address]))
       return [];
-    return \array_values($this->map_account_hash[$address]);
+
+    $hooks = \array_values($this->map_account_hash[$address]);
+    
+    $r = [];
+    foreach($hooks as $hData) {
+      $r[] = $hData[0];
+    }
+    return $r;
   }
 
   /**
@@ -387,7 +436,12 @@ class TxHookParser
   {
     if(!isset($this->map_typeevent_hashes['HookDefinition_created']))
       return [];
-    return \array_values(\array_unique($this->map_typeevent_hashes['HookDefinition_created']));
+
+    $r = [];
+    foreach($this->map_typeevent_hashes['HookDefinition_created'] as $hData) {
+      $r[] = $hData[0];
+    }
+    return \array_unique($r);
   }
 
   /**
@@ -414,7 +468,12 @@ class TxHookParser
   {
     if(!isset($this->map_typeevent_hashes['HookDefinition_destroyed']))
       return [];
-    return \array_values(\array_unique($this->map_typeevent_hashes['HookDefinition_destroyed']));
+
+    $r = [];
+    foreach($this->map_typeevent_hashes['HookDefinition_destroyed'] as $hData) {
+      $r[] = $hData[0];
+    }
+    return \array_unique($r);
   }
 
   /**
@@ -431,6 +490,16 @@ class TxHookParser
    */
   public function installedHooks(): array
   {
+    $hooks = $this->installedHooksPos();
+    $r = [];
+    foreach($hooks as $hData) {
+      $r[] = $hData[0];
+    }
+    return $r;
+  }
+
+  public function installedHooksPos(): array
+  {
     if(!isset($this->map_typeevent_hashes['Hook_installed']))
       return [];
     return \array_values($this->map_typeevent_hashes['Hook_installed']);
@@ -446,7 +515,8 @@ class TxHookParser
     if(!isset($this->map_typeevent_hashes['Hook_installed']))
       return [];
     $collect = [];
-    foreach($this->map_typeevent_hashes['Hook_installed'] as $h) {
+    foreach($this->map_typeevent_hashes['Hook_installed'] as $hData) {
+      $h = $hData[0];
       if(!isset($collect[$h]))
         $collect[$h] = 0;
       $collect[$h]++;
@@ -458,6 +528,16 @@ class TxHookParser
    * Get list of uninstalled hooks from account in this transaction.
    */
   public function uninstalledHooks(): array
+  {
+    $hooks = $this->uninstalledHooksPos();
+    $r = [];
+    foreach($hooks as $hData) {
+      $r[] = $hData[0];
+    }
+    return $r;
+  }
+
+  public function uninstalledHooksPos(): array
   {
     if(!isset($this->map_typeevent_hashes['Hook_uninstalled']))
       return [];
@@ -473,7 +553,8 @@ class TxHookParser
     if(!isset($this->map_typeevent_hashes['Hook_uninstalled']))
       return [];
     $collect = [];
-    foreach($this->map_typeevent_hashes['Hook_uninstalled'] as $h) {
+    foreach($this->map_typeevent_hashes['Hook_uninstalled'] as $hData) {
+      $h = $hData[0];
       if(!isset($collect[$h]))
         $collect[$h] = 0;
       $collect[$h]++;
@@ -483,10 +564,41 @@ class TxHookParser
 
   public function modifiedHooks(): array
   {
+    $hooks = $this->modifiedHooksPos();
+    $r = [];
+    foreach($hooks as $hData) {
+      $r[] = $hData[0];
+    }
+    return $r;
+  }
+
+  public function modifiedHooksPos(): array
+  {
     if(!isset($this->map_typeevent_hashes['Hook_modified']))
       return [];
     return \array_values($this->map_typeevent_hashes['Hook_modified']);
   }
+
+  /**
+   * Hooks which by SetHook action was reinstalled but contents was not changed.
+   */
+  public function unmodifiedHooks(): array
+  {
+    $hooks = $this->unmodifiedHooksPos();
+    $r = [];
+    foreach($hooks as $hData) {
+      $r[] = $hData[0];
+    }
+    return $r;
+  }
+
+  public function unmodifiedHooksPos(): array
+  {
+    if(!isset($this->map_typeevent_hashes['Hook_unmodified']))
+      return [];
+    return \array_values($this->map_typeevent_hashes['Hook_unmodified']);
+  }
+
 
   # Static
 

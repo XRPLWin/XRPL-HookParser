@@ -7,42 +7,40 @@ use XRPLWin\XRPLHookParser\TxHookParser;
 
 /***
  * SetHook
- * Previously one hook
- * Finally two hooks but they are exactly the same hash and contents.
- * This is modify (pos0) and install (pos1) action for same hook hash
+ * Position tests.
  */
-final class Tx15Test extends TestCase
+final class Tx16Test extends TestCase
 {
-  public function testSetHookExtractDoubleHookOneInstalled()
+  public function testSetHook()
   {
-    $transaction = file_get_contents(__DIR__.'/fixtures/tx15.json');
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx16.json');
     $transaction = \json_decode($transaction);
     $TxHookParser = new TxHookParser($transaction->result);
-
+    //dd($TxHookParser);
     # List of all hooks
     $hooks = $TxHookParser->hooks();
     $this->assertIsArray($hooks);
     $this->assertEquals([
-      'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',
+      '4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',
     ], $hooks);
-
+    
     # List of all accounts that are affected by hooks in transaction
     $accounts = $TxHookParser->accounts();
     $this->assertIsArray($accounts);
     $this->assertEquals([
-      'rU52Rrh1K1X7Muvx4PnpjRq8nACrfHXAy6',
+      'rMUyMTJMNWfMY6ZAar929gGSCBZi6A45mb',
     ], $accounts);
-  
+    
     # List of newly created hooks
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
     $this->assertEquals([], $createdHooks);
-
+    
     # List of newly created hooks (detailed)
     $createdHooksDetailed = $TxHookParser->createdHooksDetailed();
     $this->assertIsArray($createdHooksDetailed);
     $this->assertEquals([], $createdHooksDetailed);
-
+    
     # List of newly destroyed hooks
     $destroyedHooks = $TxHookParser->destroyedHooks();
     $this->assertIsArray($destroyedHooks);
@@ -52,7 +50,7 @@ final class Tx15Test extends TestCase
     $installedHooks = $TxHookParser->installedHooks();
     $this->assertIsArray($installedHooks);
     $this->assertEquals([
-      'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',
+      '4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',
     ], $installedHooks);
     
     # List of uninstalled hooks
@@ -74,37 +72,40 @@ final class Tx15Test extends TestCase
     
     # List of hooks by account
     # In this case this account have two hooks with of same hash, one added one unmodified
-    $accountHooks = $TxHookParser->accountHooks('rU52Rrh1K1X7Muvx4PnpjRq8nACrfHXAy6');
+    $accountHooks = $TxHookParser->accountHooks('rMUyMTJMNWfMY6ZAar929gGSCBZi6A45mb');
     $this->assertIsArray($accountHooks);
     $this->assertEquals([
-      'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',
-      'ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',
+      '4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',
+      '4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',
+      '4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',
     ], $accountHooks);
-    
     # List of accounts by hook
-    $hookAccounts = $TxHookParser->hookAccounts('ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7');
+    $hookAccounts = $TxHookParser->hookAccounts('4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91');
+    
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([
-      'rU52Rrh1K1X7Muvx4PnpjRq8nACrfHXAy6',
+      'rMUyMTJMNWfMY6ZAar929gGSCBZi6A45mb',
     ], $hookAccounts);
-
-    $this->assertFalse($TxHookParser->isHookCreated('ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7'));
+    
+    $this->assertFalse($TxHookParser->isHookCreated('4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91'));
   }
 
   public function testSetHookPositions()
   {
-    $transaction = file_get_contents(__DIR__.'/fixtures/tx15.json');
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx16.json');
     $transaction = \json_decode($transaction);
     $TxHookParser = new TxHookParser($transaction->result);
     
     $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    
     $this->assertIsArray($uninstalledHooksPos);
     $this->assertEquals([], $uninstalledHooksPos);
 
     $installedHooksPos = $TxHookParser->installedHooksPos();
+    
     $this->assertIsArray($installedHooksPos);
     $this->assertEquals([
-      ['ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',1],
+      ['4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',3],
     ], $installedHooksPos);
 
     $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
@@ -114,7 +115,8 @@ final class Tx15Test extends TestCase
     $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
     $this->assertIsArray($unmodifiedHooksPos);
     $this->assertEquals([
-      ['ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',0],
+      ['4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',0],
+      ['4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',1],
     ], $unmodifiedHooksPos);
   }
 }

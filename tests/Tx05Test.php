@@ -18,22 +18,29 @@ final class Tx05Test extends TestCase
 
     # List of all hooks
     $hooks = $TxHookParser->hooks();
+    
     $this->assertIsArray($hooks);
     $this->assertEquals([
       '012FD32EDF56C26C0C8919E432E15A5F242CC1B31AF814D464891C560465613B',
     ], $hooks);
-   
+    
     # List of newly created hooks (none here)
     $createdHooks = $TxHookParser->createdHooks();
     $this->assertIsArray($createdHooks);
     $this->assertEquals([], $createdHooks);
-
+    
     # List of modified hooks
     $modifiedHooks = $TxHookParser->modifiedHooks();
     $this->assertIsArray($modifiedHooks);
+    $this->assertEquals([], $modifiedHooks);
+
+    # List of unchanged hooks
+    $unmodifiedHooks = $TxHookParser->unmodifiedHooks();
+    //dd($unmodifiedHooks);
+    $this->assertIsArray($unmodifiedHooks);
     $this->assertEquals([
       '012FD32EDF56C26C0C8919E432E15A5F242CC1B31AF814D464891C560465613B', //modified but unchanged
-    ], $modifiedHooks);
+    ], $unmodifiedHooks);
     
     # List of all accounts
     $accounts = $TxHookParser->accounts();
@@ -66,5 +73,30 @@ final class Tx05Test extends TestCase
     $hookAccounts = $TxHookParser->hookAccounts('5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77');
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([], $hookAccounts);
+  }
+
+  public function testSetHookPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx05.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
+    
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([], $uninstalledHooksPos);
+
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
+    $this->assertEquals([], $installedHooksPos);
+
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
+    
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([
+      ['012FD32EDF56C26C0C8919E432E15A5F242CC1B31AF814D464891C560465613B',0]
+    ], $unmodifiedHooksPos);
   }
 }
