@@ -135,7 +135,7 @@ Version 2.x brings overhaul of hook detection code and now
 positions are tracked, which in return allows new methods
 listed below. For each installed, modified and uninstalled
 hook on account it is possible to get position in which change
-was occured. Modified Hooks method now does not return hooks
+was occurred. Modified Hooks method now does not return hooks
 which was reinstalled but contents are not changed (Flag=0 is normalized),
 those are now available in `unmodifiedHooks` and `unmodifiedHooksPos` methods.
 
