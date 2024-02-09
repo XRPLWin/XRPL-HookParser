@@ -7,7 +7,6 @@ use XRPLWin\XRPLHookParser\TxHookParser;
 
 /***
  * SetHook
- * - in this transaction: Replaced 2 hooks with 2 new, both destroyed and created
  */
 final class Tx12Test extends TestCase
 {
@@ -91,5 +90,30 @@ final class Tx12Test extends TestCase
     $this->assertIsArray($params);
     $this->assertNotEmpty($params); //one initial param defined in hook install
     $this->assertEquals(['61646D696E' => '0396E8C67D736A05A854B1A193F3CC925AC7CED87F25A9F1B3F1E1263F953B2E24'],$params);
+  }
+
+  public function testSetHookPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx12.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
+    
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([], $uninstalledHooksPos);
+
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
+    $this->assertEquals([
+      ['264EE7E3319FC0096B65EDF5BFD70264DA8A38387887EC13BEF343F0F581A9D5',0]
+    ], $installedHooksPos);
+
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
+    
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([], $unmodifiedHooksPos);
   }
 }

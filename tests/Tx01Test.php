@@ -125,4 +125,34 @@ final class Tx01Test extends TestCase
     $this->assertIsArray($params);
     $this->assertEmpty($params); //no initial params defined in hook install
   }
+
+  public function testEnableAmendmentPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx01.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
+    
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([], $uninstalledHooksPos);
+
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
+    $this->assertEquals([
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+      ['610F33B8EBF7EC795F822A454FB852156AEFE50BE0CB8326338A81CD74801864',1], //reward
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+      ['5EDF6439C47C423EAC99C1061EE2A0CE6A24A58C8E8A66E4B3AF91D76772DC77',0],
+    ], $installedHooksPos);
+
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
+    
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([], $unmodifiedHooksPos);
+  }
 }

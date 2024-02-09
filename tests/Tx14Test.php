@@ -93,7 +93,31 @@ final class Tx14Test extends TestCase
     ], $hookAccounts);
 
     $this->assertFalse($TxHookParser->isHookCreated('ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7'));
+  }
+
+  public function testSetHookPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx14.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
     
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([], $uninstalledHooksPos);
+
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
+    $this->assertEquals([], $installedHooksPos);
+
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
     
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([
+      ['ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',0],
+      ['ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',1]
+    ], $unmodifiedHooksPos);
   }
 }

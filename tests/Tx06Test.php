@@ -83,4 +83,29 @@ final class Tx06Test extends TestCase
     $this->assertIsArray($hookAccounts);
     $this->assertEquals([], $hookAccounts);
   }
+
+  public function testSetHookPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx06.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
+    
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([
+      ['ACD3E29170EB82FFF9F31A067566CD15F3A328F873F34A5D9644519C33D55EB7',0]
+    ], $uninstalledHooksPos);
+
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
+    $this->assertEquals([], $installedHooksPos);
+
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
+    
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([], $unmodifiedHooksPos);
+  }
 }

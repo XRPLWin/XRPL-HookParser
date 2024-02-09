@@ -194,13 +194,13 @@ class TxHookParser
         );
       }
     }
-    //dd($this->meta,$this->map_full,$this->map_hash_accounts,$this->map_account_hash,$this->map_hashes);
   }
 
   private function normalizeHookNode(\stdClass $node): array
   {
     $n = (array)$node;
-    //if(!isset($n['Flags'])) $n['Flags'] = 0;
+    //Normalize Flag, omitted is same as 0
+    if(!isset($n['Flags'])) $n['Flags'] = 0;
     \ksort($n);
     return $n;
   }
@@ -317,87 +317,6 @@ class TxHookParser
     return $r;
   }
   
-  
-  private function hookChangesFromModifiedHookNode_Old(?array $prev, ?array $final, bool $prevFieldsSet): array
-  {
-    //flag to indicate modification of hook (prev does not exist in modified node)
-    //ledger does not include previous fields when there is no changes
-    $is_modify = !$prevFieldsSet;
-    
-    $prev = $prev === null?[]:$prev;
-    $final = $final === null?[]:$final;
-    
-    $r = ['added' => [], 'removed' => [], 'unmodified' => [], 'modified' => []];
-    $tracker = [];
-    $postracker = ['prev' => [],'final' => []];
-
-    # POSTRACKER, eg hook index per hook, each first hook has index of 0
-    # if there is two same hook hashes they will have indexes 0 and 1
-    # Differentiate same hooks in different positions
-    foreach($prev as $p) {
-      if(!isset($p->Hook->HookHash)) continue;
-      if(!isset($postracker['prev'][$p->Hook->HookHash]))
-        $postracker['prev'][$p->Hook->HookHash] = -1;
-      $postracker['prev'][$p->Hook->HookHash]++;
-    }
-
-    foreach($final as $p) {
-      if(!isset($p->Hook->HookHash)) continue;
-      if(!isset($postracker['final'][$p->Hook->HookHash]))
-        $postracker['final'][$p->Hook->HookHash] = -1;
-      $postracker['final'][$p->Hook->HookHash]++;
-    }
-    # POSTRACKER END
-    foreach($prev as $p) {
-      if(!isset($p->Hook->HookHash)) continue;
-      $h = $p->Hook->HookHash;
-      //Index:
-      $hi = $postracker['prev'][$h];
-      $postracker['prev'][$h]--; //one index exausted
-      //Index end
-      $contents = $this->normalizeHookNode($p->Hook);
-      $tracker[$h.'_'.$hi] = ['state' => 1, 'hsh' => [\json_encode($contents)]];
-    }
-    
-    foreach($final as $p) {
-      if(!isset($p->Hook->HookHash)) continue;
-      $h = $p->Hook->HookHash;
-      //Index:
-      $hi = $postracker['final'][$h];
-      $postracker['final'][$h]--; //one index exausted
-      //Index end
-      $contents = $this->normalizeHookNode($p->Hook);
-      if(!isset($tracker[$h.'_'.$hi])) {
-        $tracker[$h.'_'.$hi] = ['state' => 0, 'hsh' => [\json_encode($contents)]];
-      } else {
-        $tracker[$h.'_'.$hi]['hsh'][] = \json_encode($contents);
-        $tracker[$h.'_'.$hi]['state']++;
-      }
-    }
-
-    foreach($tracker as $h => $data) {
-      $state = $data['state'];
-      if($state === 0) {
-        //hook added
-        if($is_modify)
-          $r['modified'][$h] = true;
-        else
-          $r['added'][$h] = true;
-      } else if($state === 1) {
-        //hook removed
-        $r['removed'][$h] = true;
-      } else if($state === 2) {
-        //hook kept
-        if(count($data['hsh']) > 1 && $data['hsh'][0] != $data['hsh'][1]) {
-          $r['modified'][$h] = true;
-        } else {
-          $r['unmodified'][$h] = true;
-        }
-      }
-    }
-    return $r;
-  }
-
   private function extractHooksFromContext(): void
   {
     # Invoked hook (https://docs.xahau.network/features/transaction-types/invoke)

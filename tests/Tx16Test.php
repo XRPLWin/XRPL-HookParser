@@ -11,7 +11,7 @@ use XRPLWin\XRPLHookParser\TxHookParser;
  */
 final class Tx16Test extends TestCase
 {
-  public function testSetHookPositions()
+  public function testSetHook()
   {
     $transaction = file_get_contents(__DIR__.'/fixtures/tx16.json');
     $transaction = \json_decode($transaction);
@@ -88,15 +88,35 @@ final class Tx16Test extends TestCase
     ], $hookAccounts);
     
     $this->assertFalse($TxHookParser->isHookCreated('4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91'));
-    
-    # List of hooks with positions:
+  }
 
-    //INSTALLED POSITIONS
+  public function testSetHookPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx16.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
+    
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([], $uninstalledHooksPos);
+
     $installedHooksPos = $TxHookParser->installedHooksPos();
+    
     $this->assertIsArray($installedHooksPos);
     $this->assertEquals([
       ['4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',3],
     ], $installedHooksPos);
 
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
+    
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([
+      ['4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',0],
+      ['4512D7BABEF201C779E76B2FEECB0D655E088426B5769F0C6796A1E97FD82D91',1],
+    ], $unmodifiedHooksPos);
   }
 }

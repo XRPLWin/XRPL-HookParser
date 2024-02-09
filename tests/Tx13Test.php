@@ -34,7 +34,30 @@ final class Tx13Test extends TestCase
     $this->assertEquals([
       '8604F7EB191536337C1BF7F9048404FBAD1108F6C7BEBCCB9A07A6FDEDB0A840',
     ], $unmodifiedHooks);
+  }
+
+  public function testSetHookPositions()
+  {
+    $transaction = file_get_contents(__DIR__.'/fixtures/tx13.json');
+    $transaction = \json_decode($transaction);
+    $TxHookParser = new TxHookParser($transaction->result);
     
+    $uninstalledHooksPos = $TxHookParser->uninstalledHooksPos();
+    $this->assertIsArray($uninstalledHooksPos);
+    $this->assertEquals([], $uninstalledHooksPos);
+
+    $installedHooksPos = $TxHookParser->installedHooksPos();
+    $this->assertIsArray($installedHooksPos);
+    $this->assertEquals([], $installedHooksPos);
+
+    $modifiedHooksPos = $TxHookParser->modifiedHooksPos();
+    $this->assertIsArray($modifiedHooksPos);
+    $this->assertEquals([], $modifiedHooksPos);
     
+    $unmodifiedHooksPos = $TxHookParser->unmodifiedHooksPos();
+    $this->assertIsArray($unmodifiedHooksPos);
+    $this->assertEquals([
+      ['8604F7EB191536337C1BF7F9048404FBAD1108F6C7BEBCCB9A07A6FDEDB0A840',0]
+    ], $unmodifiedHooksPos);
   }
 }
