@@ -221,7 +221,6 @@ class TxHookParser
       //no change
       return [
         'type' => 'unmodified_null',
-        'focus' => null,
         'old' => null,
         'new' => null
       ];
@@ -236,7 +235,6 @@ class TxHookParser
       }
       return [
         'type' => 'added',
-        'focus' => $final->Hook->HookHash,
         'old' => null,
         'new' => $final->Hook->HookHash
       ];
@@ -244,7 +242,6 @@ class TxHookParser
       //uninstall
       return [
         'type' => 'removed',
-        'focus' => $prev->Hook->HookHash,
         'old' => $prev->Hook->HookHash,
         'new' => null
       ];
