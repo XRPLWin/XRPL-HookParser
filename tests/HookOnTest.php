@@ -124,6 +124,7 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttNFTOKEN_CREATE_OFFER]);
     unset($expected[HookOn::ttNFTOKEN_CANCEL_OFFER]);
     unset($expected[HookOn::ttNFTOKEN_ACCEPT_OFFER]);
+    unset($expected[HookOn::ttREMIT]);
     unset($expected[HookOn::ttGENESIS_MINT]);
     unset($expected[HookOn::ttIMPORT]);
     unset($expected[HookOn::ttCLAIM_REWARD]);
@@ -148,6 +149,7 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttNFTOKEN_CREATE_OFFER]);
     unset($expected[HookOn::ttNFTOKEN_CANCEL_OFFER]);
     unset($expected[HookOn::ttNFTOKEN_ACCEPT_OFFER]);
+    unset($expected[HookOn::ttREMIT]);
     unset($expected[HookOn::ttGENESIS_MINT]);
     unset($expected[HookOn::ttIMPORT]);
     unset($expected[HookOn::ttCLAIM_REWARD]);
