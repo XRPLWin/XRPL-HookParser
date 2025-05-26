@@ -91,10 +91,10 @@ $lookup = $TxHookParser->lookup('raddress...','Hook','installed');
 #   create and destroy actions. List of hooks always returns unique hashes.
 ```
 
-### HookOn field
+### HookOn/HookCanEmit field
 See https://richardah.github.io/xrpl-hookon-calculator/ for reference.
 
-Decode HookOnString
+Decode HookOn or HookCanEmit String
 ```PHP
 use XRPLWin\XRPLHookParser\HookOn;
 
@@ -116,7 +116,7 @@ HookOn::decode('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFF
 HookOn::decode('0XFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFFF');
 ```
 
-Encode HookOnString
+Encode HookOn or HookCanEmit String
 ```PHP
 use XRPLWin\XRPLHookParser\HookOn;
 
