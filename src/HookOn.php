@@ -30,7 +30,7 @@ class HookOn
   const ttNICKNAME_SET = 6; //deprecated
   const ttOFFER_CREATE = 7;
   const ttOFFER_CANCEL = 8;
-  const ttCONTRACT = 9; //deprecated
+  const ttCONTRACT = 9; //deprecated (removed from xahaud)
   const ttTICKET_CREATE = 10;
   const ttSPINAL_TAP = 11; //deprecated
   const ttSIGNER_LIST_SET = 12;
@@ -49,11 +49,13 @@ class HookOn
   const ttNFTOKEN_CREATE_OFFER = 27; //Private
   const ttNFTOKEN_CANCEL_OFFER = 28; //Private
   const ttNFTOKEN_ACCEPT_OFFER = 29; //Private
+  const ttCLAWBACK = 30;
   const ttURITOKEN_MINT = 45;
   const ttURITOKEN_BURN = 46;
   const ttURITOKEN_BUY = 47;
   const ttURITOKEN_CREATE_SELL_OFFER = 48;
   const ttURITOKEN_CANCEL_SELL_OFFER = 49;
+  const ttREMARKS_SET = 94;
   const ttREMIT = 95;
   const ttGENESIS_MINT = 96; //Private
   const ttIMPORT = 97; //Private
@@ -95,11 +97,13 @@ class HookOn
     27 => 'ttNFTOKEN_CREATE_OFFER',
     28 => 'ttNFTOKEN_CANCEL_OFFER',
     29 => 'ttNFTOKEN_ACCEPT_OFFER',
+    30 => 'ttCLAWBACK',
     45 => 'ttURITOKEN_MINT',
     46 => 'ttURITOKEN_BURN',
     47 => 'ttURITOKEN_BUY',
     48 => 'ttURITOKEN_CREATE_SELL_OFFER',
     49 => 'ttURITOKEN_CANCEL_SELL_OFFER',
+    94 => 'ttREMARKS_SET',
     95 => 'ttREMIT',
     96 => 'ttGENESIS_MINT',
     97 => 'ttIMPORT',

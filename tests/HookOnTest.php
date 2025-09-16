@@ -115,7 +115,7 @@ final class HookOnTest extends TestCase
     $this->assertEquals(254,count($triggered));
     
     //ALL (public) triggers
-    $hookon = '0xfffffffffffffffffffffffffffffffffffffff7fffffffffffc1fffffc00a40';
+    $hookon = '0xfffffffffffffffffffffffffffffffffffffff13ffffffffffc1fffbfc00a40';
     $triggered = HookOn::decode($hookon);
     $expected = HookOn::MAP;
     //Following are "private" triggers, as documented absent in https://richardah.github.io/xrpl-hookon-calculator
@@ -124,10 +124,10 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttNFTOKEN_CREATE_OFFER]);
     unset($expected[HookOn::ttNFTOKEN_CANCEL_OFFER]);
     unset($expected[HookOn::ttNFTOKEN_ACCEPT_OFFER]);
-    unset($expected[HookOn::ttREMIT]);
+    //unset($expected[HookOn::ttREMIT]);
     unset($expected[HookOn::ttGENESIS_MINT]);
-    unset($expected[HookOn::ttIMPORT]);
-    unset($expected[HookOn::ttCLAIM_REWARD]);
+    //unset($expected[HookOn::ttIMPORT]);
+    //unset($expected[HookOn::ttCLAIM_REWARD]);
     unset($expected[HookOn::ttAMENDMENT]);
     unset($expected[HookOn::ttFEE]);
     unset($expected[HookOn::ttUNL_MODIFY]);
@@ -140,7 +140,7 @@ final class HookOnTest extends TestCase
     $this->assertEquals($expected,$triggered);
 
     //ALL triggers except TRUST_SET
-    $hookon = '0xfffffffffffffffffffffffffffffffffffffff7fffffffffffc1fffffd00a40';
+    $hookon = '0xfffffffffffffffffffffffffffffffffffffff13ffffffffffc1fffbfd00a40';
     $triggered = HookOn::decode($hookon);
     $expected = HookOn::MAP;
     //Following are "private" triggers, as documented absent in https://richardah.github.io/xrpl-hookon-calculator
@@ -149,10 +149,10 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttNFTOKEN_CREATE_OFFER]);
     unset($expected[HookOn::ttNFTOKEN_CANCEL_OFFER]);
     unset($expected[HookOn::ttNFTOKEN_ACCEPT_OFFER]);
-    unset($expected[HookOn::ttREMIT]);
+    //unset($expected[HookOn::ttREMIT]);
     unset($expected[HookOn::ttGENESIS_MINT]);
-    unset($expected[HookOn::ttIMPORT]);
-    unset($expected[HookOn::ttCLAIM_REWARD]);
+    //unset($expected[HookOn::ttIMPORT]);
+    //unset($expected[HookOn::ttCLAIM_REWARD]);
     unset($expected[HookOn::ttAMENDMENT]);
     unset($expected[HookOn::ttFEE]);
     unset($expected[HookOn::ttUNL_MODIFY]);
