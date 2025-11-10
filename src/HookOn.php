@@ -55,6 +55,8 @@ class HookOn
   const ttURITOKEN_BUY = 47;
   const ttURITOKEN_CREATE_SELL_OFFER = 48;
   const ttURITOKEN_CANCEL_SELL_OFFER = 49;
+  const ttCRON = 92;
+  const ttCRON_SET = 93;
   const ttREMARKS_SET = 94;
   const ttREMIT = 95;
   const ttGENESIS_MINT = 96; //Private
@@ -103,6 +105,8 @@ class HookOn
     47 => 'ttURITOKEN_BUY',
     48 => 'ttURITOKEN_CREATE_SELL_OFFER',
     49 => 'ttURITOKEN_CANCEL_SELL_OFFER',
+    92 => 'ttCRON',
+    93 => 'ttCRON_SET',
     94 => 'ttREMARKS_SET',
     95 => 'ttREMIT',
     96 => 'ttGENESIS_MINT',

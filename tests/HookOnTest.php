@@ -114,10 +114,11 @@ final class HookOnTest extends TestCase
     $triggered = HookOn::decode($hookon,false);
     $this->assertEquals(254,count($triggered));
     
-    //ALL (public) triggers
+    //Almost ALL (public) triggers
     $hookon = '0xfffffffffffffffffffffffffffffffffffffff13ffffffffffc1fffbfc00a40';
     $triggered = HookOn::decode($hookon);
     $expected = HookOn::MAP;
+    
     //Following are "private" triggers, as documented absent in https://richardah.github.io/xrpl-hookon-calculator
     unset($expected[HookOn::ttNFTOKEN_MINT]);
     unset($expected[HookOn::ttNFTOKEN_BURN]);
@@ -137,9 +138,13 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttSPINAL_TAP]);
     //Remove "public" contract (added later)
     unset($expected[HookOn::ttCONTRACT]);
+    unset($expected[HookOn::ttCRON]); //public new since 10.2025
+    unset($expected[HookOn::ttCRON_SET]); //public new since 10.2025
+    //dd($triggered,$expected);
+    
     $this->assertEquals($expected,$triggered);
-
-    //ALL triggers except TRUST_SET
+    
+    //ALL triggers except ttTRUST_SET, ttCRON, and ttCRON_SET
     $hookon = '0xfffffffffffffffffffffffffffffffffffffff13ffffffffffc1fffbfd00a40';
     $triggered = HookOn::decode($hookon);
     $expected = HookOn::MAP;
@@ -161,9 +166,11 @@ final class HookOnTest extends TestCase
     unset($expected[HookOn::ttNICKNAME_SET]);
     unset($expected[HookOn::ttSPINAL_TAP]);
 
-    //Remove "public" trust set and contract
+    //Remove "public" trust set, contract, and cron
     unset($expected[HookOn::ttTRUST_SET]);
     unset($expected[HookOn::ttCONTRACT]);
+    unset($expected[HookOn::ttCRON]); //public new since 10.2025
+    unset($expected[HookOn::ttCRON_SET]); //public new since 10.2025
     $this->assertEquals($expected,$triggered);
   }
 
