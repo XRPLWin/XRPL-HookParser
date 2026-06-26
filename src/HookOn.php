@@ -50,11 +50,49 @@ class HookOn
   const ttNFTOKEN_CANCEL_OFFER = 28; //Private
   const ttNFTOKEN_ACCEPT_OFFER = 29; //Private
   const ttCLAWBACK = 30;
+
+  //AMM suite
+  const ttAMM_CLAWBACK = 31;
+  const ttAMM_CREATE = 35;
+  const ttAMM_DEPOSIT = 36;
+  const ttAMM_WITHDRAW = 37;
+  const ttAMM_VOTE = 38;
+  const ttAMM_BID = 39;
+  const ttAMM_DELETE = 40;
+
   const ttURITOKEN_MINT = 45;
   const ttURITOKEN_BURN = 46;
   const ttURITOKEN_BUY = 47;
   const ttURITOKEN_CREATE_SELL_OFFER = 48;
   const ttURITOKEN_CANCEL_SELL_OFFER = 49;
+  
+  //XChain suite
+  const ttXCHAIN_CREATE_CLAIM_ID = 50;
+  const ttXCHAIN_COMMIT = 51;
+  const ttXCHAIN_CLAIM = 52;
+  const ttXCHAIN_ACCOUNT_CREATE_COMMIT = 53;
+  const ttXCHAIN_ADD_CLAIM_ATTESTATION = 54;
+  const ttXCHAIN_ADD_ACCOUNT_CREATE_ATTESTATION = 55;
+  const ttXCHAIN_MODIFY_BRIDGE = 56;
+  const ttXCHAIN_CREATE_BRIDGE = 57;
+
+  //DID/Oracle/MPToken/Credential suite
+  const ttDID_SET = 58;
+  const ttDID_DELETE = 59;
+  const ttORACLE_SET = 60;
+  const ttORACLE_DELETE = 61;
+  const ttLEDGER_STATE_FIX = 62;
+  const ttMPTOKEN_ISSUANCE_CREATE = 63;
+  const ttMPTOKEN_ISSUANCE_DESTROY = 64;
+  const ttMPTOKEN_ISSUANCE_SET = 65;
+  const ttMPTOKEN_AUTHORIZE = 66;
+  const ttCREDENTIAL_CREATE = 67;
+  const ttCREDENTIAL_ACCEPT = 68;
+  const ttCREDENTIAL_DELETE = 69;
+  const ttNFTOKEN_MODIFY = 70;
+  const ttPERMISSIONED_DOMAIN_SET = 71;
+  const ttPERMISSIONED_DOMAIN_DELETE = 72;
+
   const ttCRON = 92;
   const ttCRON_SET = 93;
   const ttREMARKS_SET = 94;
@@ -68,7 +106,6 @@ class HookOn
   const ttUNL_MODIFY = 102; //Private
   const ttEMIT_FAILURE = 103; //Private
   const ttUNL_REPORT = 104; //Private
-
 
   const MAP = [
     0 => 'ttPAYMENT',
@@ -100,11 +137,41 @@ class HookOn
     28 => 'ttNFTOKEN_CANCEL_OFFER',
     29 => 'ttNFTOKEN_ACCEPT_OFFER',
     30 => 'ttCLAWBACK',
+    31 => 'ttAMM_CLAWBACK',
+    35 => 'ttAMM_CREATE',
+    36 => 'ttAMM_DEPOSIT',
+    37 => 'ttAMM_WITHDRAW',
+    38 => 'ttAMM_VOTE',
+    39 => 'ttAMM_BID',
+    40 => 'ttAMM_DELETE',
     45 => 'ttURITOKEN_MINT',
     46 => 'ttURITOKEN_BURN',
     47 => 'ttURITOKEN_BUY',
     48 => 'ttURITOKEN_CREATE_SELL_OFFER',
     49 => 'ttURITOKEN_CANCEL_SELL_OFFER',
+    50 => 'ttXCHAIN_CREATE_CLAIM_ID',
+    51 => 'ttXCHAIN_COMMIT',
+    52 => 'ttXCHAIN_CLAIM',
+    53 => 'ttXCHAIN_ACCOUNT_CREATE_COMMIT',
+    54 => 'ttXCHAIN_ADD_CLAIM_ATTESTATION',
+    55 => 'ttXCHAIN_ADD_ACCOUNT_CREATE_ATTESTATION',
+    56 => 'ttXCHAIN_MODIFY_BRIDGE',
+    57 => 'ttXCHAIN_CREATE_BRIDGE',
+    58 => 'ttDID_SET',
+    59 => 'ttDID_DELETE',
+    60 => 'ttORACLE_SET',
+    61 => 'ttORACLE_DELETE',
+    62 => 'ttLEDGER_STATE_FIX',
+    63 => 'ttMPTOKEN_ISSUANCE_CREATE',
+    64 => 'ttMPTOKEN_ISSUANCE_DESTROY',
+    65 => 'ttMPTOKEN_ISSUANCE_SET',
+    66 => 'ttMPTOKEN_AUTHORIZE',
+    67 => 'ttCREDENTIAL_CREATE',
+    68 => 'ttCREDENTIAL_ACCEPT',
+    69 => 'ttCREDENTIAL_DELETE',
+    70 => 'ttNFTOKEN_MODIFY',
+    71 => 'ttPERMISSIONED_DOMAIN_SET',
+    72 => 'ttPERMISSIONED_DOMAIN_DELETE',
     92 => 'ttCRON',
     93 => 'ttCRON_SET',
     94 => 'ttREMARKS_SET',
