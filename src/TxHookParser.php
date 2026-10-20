@@ -601,6 +601,7 @@ class TxHookParser
 
   /**
    * Takes just created hookdefinition and returns key value parameters.
+   * HookParameterValue is omitted by rippled when parameter value is empty, in that case value is empty string.
    * @param \stdClass $hookDefinition
    * @return array
    */
@@ -612,7 +613,7 @@ class TxHookParser
 
     $HookParameters = $hookDefinition->NewFields->HookParameters;
     foreach($HookParameters as $p) {
-      $params[$p->HookParameter->HookParameterName] = $p->HookParameter->HookParameterValue;
+      $params[$p->HookParameter->HookParameterName] = isset($p->HookParameter->HookParameterValue) ? $p->HookParameter->HookParameterValue : '';
     }
     return $params;
   }
